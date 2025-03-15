@@ -15,11 +15,27 @@
   "dependencies": {
     "@capacitor/android": "^7.0.1",
     "@capacitor/core": "^7.0.1",
+    "@ionic/storage": "^4.0.0",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-popover": "^1.1.6",
+    "@radix-ui/react-radio-group": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@react-spring/web": "^9.7.5",
+    "boring-avatars": "^1.11.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "framer-motion": "^12.5.0",
     "lucide-react": "^0.479.0",
     "motion": "^12.4.10",
     "next": "15.2.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^18.3.1",
+    "react-day-picker": "^8.10.1",
+    "react-dom": "^18.3.1",
+    "sonner": "^2.0.1",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
@@ -28,6 +44,6 @@
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4.0.14"
   }
 }

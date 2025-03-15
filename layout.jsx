@@ -1,4 +1,5 @@
 import Head from "next/head";
+import ClickSpark from "./components/biteui/ClickSpark";
 
 const Layout = ({ children }) => {
     return (
@@ -6,9 +7,11 @@ const Layout = ({ children }) => {
             <Head>
                 <title>Oasis</title>
             </Head>
-            <div>
-                {children}
-            </div>
+            <ClickSpark>
+                <div>
+                    {children}
+                </div>
+            </ClickSpark>
         </>
     );
 }

@@ -2,6 +2,8 @@ import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import * as motion from "motion/react-client"
 import { useRouter } from "next/router";
+import { useEffect, useState } from 'react';
+import oasisStorage from '@/lib/storage';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +18,16 @@ const geistMono = Geist_Mono({
 export default function Home() {
 
   const router = useRouter();
+
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      const storedUsername = await oasisStorage.get('username');
+      setUsername(storedUsername || null);
+    }
+    fetchData();
+  }, []);
 
   return (
     <div
@@ -46,26 +58,54 @@ export default function Home() {
         </li>
       </ul>
       <div className="flex gap-4 items-center flex-col sm:flex-row">
-        <motion.div
-          animate={{ scale: [1.1, 1, 1.1] }}
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ duration: 0.45, repeat: Infinity }}
-        >
-          <button
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            onClick={() => { router.push('/home') }}
-          >
-            <Image
-              //className="dark:invert"
-              src="/gift.gif"
-              alt="start"
-              width={20}
-              height={20}
-            />
-            Get Started
-          </button>
-        </motion.div>
+        {username ?
+          (<>
+            <motion.div
+              animate={{ scale: [1.1, 1, 1.1] }}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.45, repeat: Infinity }}
+            >
+              <button
+                className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                onClick={() => { router.push('/app/home') }}
+              >
+                <Image
+                  //className="dark:invert"
+                  src="/gift.gif"
+                  alt="start"
+                  width={20}
+                  height={20}
+                />
+                Continue
+              </button>
+            </motion.div>
+          </>)
+          :
+          (
+            <>
+              <motion.div
+                animate={{ scale: [1.1, 1, 1.1] }}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.45, repeat: Infinity }}
+              >
+                <button
+                  className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                  onClick={() => { router.push('/app/init') }}
+                >
+                  <Image
+                    //className="dark:invert"
+                    src="/gift.gif"
+                    alt="start"
+                    width={20}
+                    height={20}
+                  />
+                  Get Started
+                </button>
+              </motion.div>
+            </>
+          )}
         <motion.div
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.95 }}
