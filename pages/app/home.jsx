@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import oasisStorage from '@/lib/storage';
 import AppGridLayout from '@/components/Home/functionList';
-import ShinyText from '@/components/biteui/ShinnyText';
 import Avatar from 'boring-avatars';
 
 export default function Home() {
