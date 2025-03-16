@@ -170,7 +170,7 @@ const Init = () => {
               text={`Name: ${name}\nGender: ${gender}`}
               animateOn="view"
               revealDirection="center"
-              speed={100}
+              speed={60}
             />
           </div>
           <br />
