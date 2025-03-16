@@ -15,6 +15,7 @@ export default function Stepper({
   backButtonText = "Back",
   nextButtonText = "Continue",
   disableStepIndicators = false,
+  disablePrevBtn = false,
   renderStepIndicator,
   ...rest
 }) {
@@ -109,8 +110,9 @@ export default function Stepper({
             >
               {currentStep !== 1 && (
                 <button
+                  disabled={disablePrevBtn}
                   onClick={handleBack}
-                  className={`duration-350 rounded px-2 py-1 transition ${currentStep === 1
+                  className={`duration-350 dark:disabled:text-[#131314] disabled:text-[#FFFFFF] rounded px-2 py-1 transition ${currentStep === 1
                     ? "pointer-events-none opacity-50 text-neutral-400"
                     : "text-neutral-400"
                     }`}
@@ -126,7 +128,7 @@ export default function Stepper({
                 <button
                   disabled={disableStepIndicators}
                   onClick={isLastStep ? handleComplete : handleNext}
-                  className="duration-350 flex items-center justify-center rounded-full bg-[#00D8FF] py-1.5 px-3.5 font-medium tracking-tight text-black transition "
+                  className="duration-350 flex items-center justify-center rounded-full disabled:hidden bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition "
                   {...nextButtonProps}
                 >
                   {isLastStep ? "Complete" : nextButtonText}
@@ -223,12 +225,12 @@ function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators }
     >
       <motion.div
         variants={{
-          inactive: { scale: 1, backgroundColor: "#222", color: "#a3a3a3" },
-          active: { scale: 1, backgroundColor: "#00d8ff", color: "#00d8ff" },
-          complete: { scale: 1, backgroundColor: "#00d8ff", color: "#3b82f6" },
+          inactive: { scale: 1, backgroundColor: "#222", color: "#fff" },
+          active: { scale: 1, backgroundColor: "#bef264", color: "#fff" },
+          complete: { scale: 1, backgroundColor: "#bef264", color: "#fff" },
         }}
         transition={{ duration: 0.3 }}
-        className="flex h-8 w-8 items-center justify-center rounded-full font-semibold"
+        className="flex h-8 w-8 items-center justify-center bg-lime-300 rounded-full font-semibold"
       >
         {status === "complete" ? (
           <CheckIcon className="h-4 w-4 text-black" />
@@ -245,11 +247,11 @@ function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators }
 function StepConnector({ isComplete }) {
   const lineVariants = {
     incomplete: { width: 0, backgroundColor: "transparent" },
-    complete: { width: "100%", backgroundColor: "#00d8ff" },
+    complete: { width: "100%", backgroundColor: "#bef264" },
   };
 
   return (
-    <div className="relative mx-2 h-0.5 flex-1 overflow-hidden rounded bg-neutral-600">
+    <div className="relative mx-2 h-0.5 flex-1 overflow-hidden rounded bg-[#52525B]">
       <motion.div
         className="absolute left-0 top-0 h-full"
         variants={lineVariants}

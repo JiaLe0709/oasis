@@ -27,6 +27,7 @@ const Init = () => {
   const [confirmed, setConfirm] = useState(false);
   const [confirmedText, setComfirmedText] = useState('Confirm')
   const [confirmToComplete, setConfirmToComplete] = useState(false);
+  const [disabledPrevBtn, setDisablePrevBtn] =  useState(false);
 
   const createUser = async () => {
     try {
@@ -35,6 +36,7 @@ const Init = () => {
       toast.success('Profile saved successfully !')
       setConfirmToComplete(true)
       setComfirmedText('Confirmed')
+      setDisablePrevBtn(true)
       setConfirm(true)
       setConfirmToComplete(true)
       setDisableNext(false)
@@ -65,6 +67,7 @@ const Init = () => {
     <div className="flex justify-center items-center min-h-screen">
       <Toaster richColors position="top-center" />
       <Stepper
+        disablePrevBtn={disabledPrevBtn}
         onStepChange={(step) => {
           setStep(step);
         }}
@@ -110,7 +113,7 @@ const Init = () => {
           </p>
         </Step>
         <Step>
-          <h2 className="text-xl">Setup Profile</h2>
+          <h2 className="text-xl font-semibold">Setup Profile</h2>
           <br />
           <Avatar name={name} colors={["#D2D996", "#BFC772", "#FF5F71", "#FF8BA6", "#FF8AA5"]} variant="beam" size={115} />
           <br />
@@ -159,7 +162,7 @@ const Init = () => {
           <br />
         </Step>
         <Step>
-          <h2 className="text-xl">Final Step</h2>
+          <h2 className="text-xl font-semibold">All done !</h2>
           <p>Please check the details below and confirm if they are correct.</p>
           <br />
           <div className="border-2 border-gray-500 rounded-lg p-4  shadow-md dark:text-white text-black">
@@ -172,7 +175,7 @@ const Init = () => {
           </div>
           <br />
           <Button
-            className={'duration-350 flex items-center justify-center rounded-full bg-[#00D8FF] py-1.5 px-3.5 font-medium tracking-tight text-black transition '}
+            className={'duration-350 flex items-center justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition '}
             onClick={() => { createUser() }}
             disabled={confirmed}
           >
