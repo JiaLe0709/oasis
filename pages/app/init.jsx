@@ -24,22 +24,26 @@ const Init = () => {
 
   // disable button logic
   const [disableNext, setDisableNext] = useState(false)
-  const [confirmed, setConfirm] = useState(false);
-  const [confirmedText, setComfirmedText] = useState('Confirm')
-  const [confirmToComplete, setConfirmToComplete] = useState(false);
-  const [disabledPrevBtn, setDisablePrevBtn] =  useState(false);
+  //const [confirmed, setConfirm] = useState(false);
+  //const [confirmedText, setComfirmedText] = useState('Confirm')
+  //const [confirmToComplete, setConfirmToComplete] = useState(false);
+  const [disabledPrevBtn, setDisablePrevBtn] = useState(false);
 
+  // confirmed name 
+  const [confirmedName, setConfirmedName] = useState()
+
+  /** 
   const createUser = async () => {
     try {
-      await oasisStorage.set('username', name);
+      await oasisStorage.set("username", name)
       await oasisStorage.set("gender", gender)
       toast.success('Profile saved successfully !')
-      setConfirmToComplete(true)
+      //setConfirmToComplete(true)
       setComfirmedText('Confirmed')
       setDisablePrevBtn(true)
       setConfirm(true)
-      setConfirmToComplete(true)
-      setDisableNext(false)
+      router.push('/app/home')
+      //setDisableNext(false)
     } catch (error) {
       console.error(error)
       setConfirm(false)
@@ -48,19 +52,41 @@ const Init = () => {
       setDisableNext(true)
     }
   }
-
+  */
   useEffect(() => {
     if (step == 2 && name?.length < 1) {
       setDisableNext(true)
     } else if (step == 3 && gender == null) {
       setDisableNext(true)
-    } else if (step == 4 && confirmToComplete !== true) {
-      setDisableNext(true)
-    }
+    } //else if (step == 4) {
+    //setDisableNext(true)
+    //}
     else {
       setDisableNext(false)
     }
-  }, [step, name, gender, confirmToComplete])
+  }, [step, name, gender])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      //oasisStorage.set('username', name)
+      setConfirmedName(name);
+    }, 500);
+
+    return () => clearTimeout(timer)
+  }, [name])
+
+  /** 
+  useEffect(() => {
+    const genderData = '-'
+    if (gender != null) {
+      if (gender == '') {
+        oasisStorage.set("gender", genderData)
+      } else {
+        oasisStorage.set("gender", gender)
+      }
+    }
+  }, [gender])
+  */
 
   return (
 
@@ -71,7 +97,16 @@ const Init = () => {
         onStepChange={(step) => {
           setStep(step);
         }}
-        onFinalStepCompleted={() => { router.push('/app/home') }}
+        onFinalStepCompleted={() => {
+          oasisStorage.set("username", name)
+          oasisStorage.set("gender", gender)
+          //toast.success('Profile saved successfully !')
+          //setConfirmToComplete(true)
+          //setComfirmedText('Confirmed')
+          //setDisablePrevBtn(true)
+          //setConfirm(true)
+          router.push('/app/home?event=success')
+        }}
         initialStep={1}
         backButtonText="Previous"
         nextButtonText="Next"
@@ -115,7 +150,13 @@ const Init = () => {
         <Step>
           <h2 className="text-xl font-semibold">Setup Profile</h2>
           <br />
-          <Avatar name={name} colors={["#D2D996", "#BFC772", "#FF5F71", "#FF8BA6", "#FF8AA5"]} variant="beam" size={115} />
+          <Avatar
+            name={confirmedName}
+            //colors={["#d2fae2", "#e6f8b1", "#f6d5ad", "#f6b794", "#e59da0"]}
+            colors={["#e6f8b1", "#BBF451", "#FF5F71", "#FF8BA6", "#FF8AA5"]}
+            //colors={["#D2D996", "#BFC772", "#FF5F71", "#FF8BA6", "#FF8AA5"]}
+            variant="beam"
+            size={115} />
           <br />
           <h2>What is your name ?</h2>
           <br />
@@ -131,21 +172,28 @@ const Init = () => {
         <Step>
           <h2>Please select your gender:</h2>
           <br />
-          {gender ? (
-            (gender == 'Boy') ? (
-              <>
-                <Image src={'.././boy.svg'} width={100} height={100} alt="boy" />
-              </>
+          <div className="flex justify-center">
+            {gender ? (
+              (gender == 'Boy') ? (
+                <>
+                  <Image src={'.././boy.png'} width={120} height={120} alt="boy" />
+                </>
+              ) : (
+                <>
+                  <Image src={'.././girl.png'} width={120} height={120} alt="girl" />
+                </>
+              )
             ) : (
               <>
-                <Image src={'.././girl.svg'} width={100} height={100} alt="girl" />
+                <Avatar
+                  name={name}
+                  colors={["#e6f8b1", "#BBF451", "#FF5F71", "#FF8BA6", "#FF8AA5"]}
+                  //colors={["#D2D996", "#BFC772", "#FF5F71", "#FF8BA6", "#FF8AA5"]}
+                  variant="beam"
+                  size={120} />
               </>
-            )
-          ) : (
-            <>
-              <Avatar name={name} colors={["#D2D996", "#BFC772", "#FF5F71", "#FF8BA6", "#FF8AA5"]} variant="beam" size={115} />
-            </>
-          )}
+            )}
+          </div>
           <br />
           <RadioGroup
             onValueChange={(value) => setGender(value)}
@@ -158,6 +206,10 @@ const Init = () => {
               <RadioGroupItem value="Girl" id="r2" />
               <Label htmlFor="r2">Girl</Label>
             </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value={''} id="r3" />
+              <Label htmlFor="r2">Rather not to say.</Label>
+            </div>
           </RadioGroup>
           <br />
         </Step>
@@ -165,22 +217,19 @@ const Init = () => {
           <h2 className="text-xl font-semibold">All done !</h2>
           <p>Please check the details below and confirm if they are correct.</p>
           <br />
-          <div className="border-2 border-gray-500 rounded-lg p-4  shadow-md dark:text-white text-black">
-            <DecryptedText
-              text={`Name: ${name}\nGender: ${gender}`}
-              animateOn="view"
-              revealDirection="center"
-              speed={60}
-            />
+          <div className="border-2 border-lime-300 rounded-lg p-4  shadow-md dark:text-white text-black">
+            Name: {name}
+            <br />
+            Gender: {gender || '-'}
           </div>
           <br />
-          <Button
+          {/*<Button
             className={'duration-350 flex items-center justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition '}
             onClick={() => { createUser() }}
             disabled={confirmed}
           >
             {confirmedText}
-          </Button>
+          </Button>*/}
         </Step>
       </Stepper>
     </div>

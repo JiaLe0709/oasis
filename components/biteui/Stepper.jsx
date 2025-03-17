@@ -112,7 +112,7 @@ export default function Stepper({
                 <button
                   disabled={disablePrevBtn}
                   onClick={handleBack}
-                  className={`duration-350 dark:disabled:text-[#131314] disabled:text-[#FFFFFF] rounded px-2 py-1 transition ${currentStep === 1
+                  className={`duration-350 dark:disabled:text-[#131314] disabled:invisible rounded px-2 py-1 transition ${currentStep === 1
                     ? "pointer-events-none opacity-50 text-neutral-400"
                     : "text-neutral-400"
                     }`}
