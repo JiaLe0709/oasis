@@ -10,7 +10,9 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       const storedUsername = await oasisStorage.get('username');
-      setUsername(storedUsername || null);
+      if (storedUsername) {
+        setUsername(storedUsername || null);
+      }
     }
 
     const date = new Date();
@@ -33,7 +35,7 @@ export default function Home() {
           <div className="flex items-center gap-4 mt-6">
             <div className="relative w-16 h-16 rounded-full overflow-hidden ">
               <Avatar
-                name={username}
+                name={username || ''}
                 //colors={["#d2fae2", "#e6f8b1", "#f6d5ad", "#f6b794", "#e59da0"]}
                 //colors={["#D2D996", "#BFC772", "#FF5F71", "#FF8BA6", "#FF8AA5"]}
                 colors={["#e6f8b1", "#BBF451", "#FF5F71", "#FF8BA6", "#FF8AA5"]}

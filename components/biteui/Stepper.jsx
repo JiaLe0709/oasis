@@ -131,7 +131,7 @@ export default function Stepper({
                   className="duration-350 flex items-center justify-center rounded-full disabled:hidden bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition "
                   {...nextButtonProps}
                 >
-                  {isLastStep ? "Complete" : nextButtonText}
+                  {isLastStep ? "Confirm" : nextButtonText}
                 </button>
               </motion.div>
             </div>

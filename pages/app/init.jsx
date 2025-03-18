@@ -5,13 +5,13 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react";
-import { Toaster, toast } from "sonner";
+//import { Toaster, toast } from "sonner";
 import oasisStorage from '@/lib/storage';
 import Avatar from 'boring-avatars';
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import DecryptedText from "@/components/biteui/depcText";
-import { Button } from "@/components/ui/button";
+//import DecryptedText from "@/components/biteui/depcText";
+//import { Button } from "@/components/ui/button";
 //import "@/styles/shadcn.css"
 
 const Init = () => {
@@ -91,7 +91,7 @@ const Init = () => {
   return (
 
     <div className="flex justify-center items-center min-h-screen">
-      <Toaster richColors position="top-center" />
+      {/*<Toaster richColors position="top-center" />*/}
       <Stepper
         disablePrevBtn={disabledPrevBtn}
         onStepChange={(step) => {
@@ -144,7 +144,7 @@ const Init = () => {
           </div>
           <br />
           <p>
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">Oasis</code> is a health tracking app specially designed for teenagers to help them maintain their healthy level. With the features like water intake tracking, BMI calculation and more.
+            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold text-lime-300">Oasis</code> is a health tracking app specially designed for teenagers to help them maintain their healthy level. With the features like water intake tracking, BMI calculation and more.
           </p>
         </Step>
         <Step>
@@ -158,7 +158,7 @@ const Init = () => {
             variant="beam"
             size={115} />
           <br />
-          <h2>What is your name ?</h2>
+          <h2>What is your <span className="text-lime-300">name</span> ?</h2>
           <br />
           <Input
             value={name}
@@ -170,7 +170,7 @@ const Init = () => {
           <br />
         </Step>
         <Step>
-          <h2>Please select your gender:</h2>
+          <h2>Please select your <span className="text-lime-300">gender</span>:</h2>
           <br />
           <div className="flex justify-center">
             {gender ? (
@@ -199,15 +199,15 @@ const Init = () => {
             onValueChange={(value) => setGender(value)}
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Boy" id="r1" />
+              <RadioGroupItem checked={gender === "Boy"} value="Boy" id="r1" />
               <Label htmlFor="r1">Boy</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Girl" id="r2" />
+              <RadioGroupItem checked={gender === "Girl"} value="Girl" id="r2" />
               <Label htmlFor="r2">Girl</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value={''} id="r3" />
+              <RadioGroupItem checked={gender === ""} value={''} id="r3" />
               <Label htmlFor="r2">Rather not to say.</Label>
             </div>
           </RadioGroup>
@@ -215,7 +215,7 @@ const Init = () => {
         </Step>
         <Step>
           <h2 className="text-xl font-semibold">All done !</h2>
-          <p>Please check the details below and confirm if they are correct.</p>
+          <p>Please <span className="text-lime-300">check</span> the details below and <span className="text-lime-300">confirm</span> if they are correct.</p>
           <br />
           <div className="border-2 border-lime-300 rounded-lg p-4  shadow-md dark:text-white text-black">
             Name: {name}
