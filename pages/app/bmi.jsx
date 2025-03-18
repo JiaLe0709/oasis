@@ -4,6 +4,17 @@ import { InfoIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
 
 
 export default function Bmi() {
@@ -29,6 +40,23 @@ export default function Bmi() {
                     </div>
                     {" "}BMI Calculator
                 </h1>
+                <Drawer>
+                    <DrawerTrigger>Open</DrawerTrigger>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+                            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+                        </DrawerHeader>
+                        <DrawerFooter>
+                            <DrawerClose>
+                                <Button className={'duration-350 w-full items-center justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold'}>
+                                    Understood
+                                </Button>
+                            </DrawerClose>
+                            <br />
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
             </div>
         </>
     );

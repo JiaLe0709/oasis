@@ -144,7 +144,7 @@ const Init = () => {
           </div>
           <br />
           <p>
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold text-lime-300">Oasis</code> is a health tracking app specially designed for teenagers to help them maintain their healthy level. With the features like water intake tracking, BMI calculation and more.
+            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold text-lime-600">Oasis</code> is a health tracking app specially designed for teenagers to help them maintain their healthy level. With the features like water intake tracking, BMI calculation and more.
           </p>
         </Step>
         <Step>
@@ -158,7 +158,7 @@ const Init = () => {
             variant="beam"
             size={115} />
           <br />
-          <h2>What is your <span className="text-lime-300">name</span> ?</h2>
+          <h2>What is your  <span className="text-lime-500 font-bold dark:text-lime-300">name</span> ?</h2>
           <br />
           <Input
             value={name}
@@ -170,7 +170,7 @@ const Init = () => {
           <br />
         </Step>
         <Step>
-          <h2>Please select your <span className="text-lime-300">gender</span>:</h2>
+          <h2>Please select your  <span className="text-lime-500 font-bold dark:text-lime-300">gender</span>:</h2>
           <br />
           <div className="flex justify-center">
             {gender ? (
@@ -208,14 +208,14 @@ const Init = () => {
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem checked={gender === ""} value={''} id="r3" />
-              <Label htmlFor="r2">Rather not to say.</Label>
+              <Label htmlFor="r3">Rather not to say.</Label>
             </div>
           </RadioGroup>
           <br />
         </Step>
         <Step>
           <h2 className="text-xl font-semibold">All done !</h2>
-          <p>Please <span className="text-lime-300">check</span> the details below and <span className="text-lime-300">confirm</span> if they are correct.</p>
+          <p>Please  <span className="text-lime-500 font-bold dark:text-lime-300">check</span> the details below and  <span className="text-lime-500 font-bold dark:text-lime-300">confirm</span> if they are correct.</p>
           <br />
           <div className="border-2 border-lime-300 rounded-lg p-4  shadow-md dark:text-white text-black">
             Name: {name}

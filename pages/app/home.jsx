@@ -2,10 +2,56 @@ import { useEffect, useState } from 'react';
 import oasisStorage from '@/lib/storage';
 import AppGridLayout from '@/components/Home/functionList';
 import Avatar from 'boring-avatars';
+import confetti from 'canvas-confetti';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter();
+
   const [username, setUsername] = useState('');
   const [greeting, setGreeting] = useState('');
+
+  const [routerEvent, setRouterEvent] = useState('')
+
+  // Confetti animation
+  const duration = 3.2 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+  const [intervalId, setIntervalId] = useState(null);
+
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  useEffect(() => {
+    if (routerEvent == 'success') {
+      const interval = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          clearInterval(intervalId);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+      }, 250);
+
+      setIntervalId(interval);
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [routerEvent])
+
+  useEffect(() => {
+    const { event } = router.query;
+    if (event !== undefined) {
+      setRouterEvent(event)
+    }
+  }, [router])
 
   useEffect(() => {
     async function fetchData() {
