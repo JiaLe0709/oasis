@@ -43,7 +43,7 @@ export default function Home() {
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             >
               <Image
-                className="items-center border-2"
+                className="items-center  border-2"
                 src="/icon.png"
                 alt="logo"
                 width={200}

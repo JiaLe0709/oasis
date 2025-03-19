@@ -14,7 +14,7 @@ export default function Bmi() {
 
     const [weight, setWeight] = useState(0);
     const [height, setHeight] = useState(0);
-    const [bmi, setBmi] = useState(0);
+    const [bmi, setBmi] = useState(null);
 
     const calculateBmi = () => {
         setBmi((weight / (height * height)).toFixed(2));
@@ -30,7 +30,9 @@ export default function Bmi() {
                         <Image src={'.././Balance.png'} width={30} height={30} alt="Tools"></Image>
                     </div>
                     {" "}BMI Calculator                 <Drawer>
-                        <DrawerTrigger><HiQuestionMarkCircle className="h-4 w-4" /></DrawerTrigger>
+                        <DrawerTrigger>
+                            <HiQuestionMarkCircle className="h-4 w-4" />
+                        </DrawerTrigger>
                         <DrawerContent>
                             <DrawerHeader>
                                 <DrawerTitle className={'text-xl'}>What is BMI ?</DrawerTitle>
@@ -56,8 +58,14 @@ export default function Bmi() {
                         </DrawerContent>
                     </Drawer>
                 </h1>
-                <div className="grid w-full max-w-sm items-center gap-1.5">
+                <div className="w-full max-w-sm items-center gap-2">
+                    {bmi && (
+                        <>
+                            {bmi}
+                        </>
+                    )}
                     <Label htmlFor="weight">Weight (Kg) :</Label>
+                    <br />
                     <Input
                         value={weight}
                         onChange={(e) => setWeight(e.target.value)}
@@ -65,7 +73,26 @@ export default function Bmi() {
                         required
                         id="weight"
                         variant="secondary"
-                    /></div>
+                    />
+                    <br />
+                    <Label htmlFor="height">Height (m) :</Label>
+                    <br />
+                    <Input
+                        value={height}
+                        onChange={(e) => setHeight(e.target.value)}
+                        placeholder="Your height (m) ?"
+                        required
+                        id="height"
+                        variant="secondary"
+                    />
+                    <br />
+                    <Button
+                        onClick={() => { calculateBmi() }}
+                        className={'duration-350 w-full items-center justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold'}
+                    >
+                        Calculate
+                    </Button>
+                </div>
             </div>
         </>
     );
