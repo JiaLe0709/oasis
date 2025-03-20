@@ -4,12 +4,15 @@ import AppGridLayout from '@/components/Home/functionList';
 import Avatar from 'boring-avatars';
 import confetti from 'canvas-confetti';
 import { useRouter } from 'next/router';
+import * as motion from "motion/react-client"
 
 export default function Home() {
   const router = useRouter();
 
   const [username, setUsername] = useState('');
   const [greeting, setGreeting] = useState('');
+  const [bmi, setBmi] = useState(null)
+  const [bodyStatus, setBodyStatus] = useState(null)
 
   const [routerEvent, setRouterEvent] = useState('')
 
@@ -56,9 +59,22 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       const storedUsername = await oasisStorage.get('username');
-      if (storedUsername) {
-        setUsername(storedUsername || null);
-      }
+      const bmiValue = await oasisStorage.get('bmi');
+
+      setUsername(storedUsername || null)
+      setBmi(bmiValue || null)
+    }
+
+    if (bmi < 18.5) {
+      setBodyStatus("Underweight")
+    } else if (bmi >= 18.5 || bmi <= 24.9) {
+      setBodyStatus('Normal Weight')
+    } else if (bmi >= 25 || bmi <= 29.9) {
+      setBodyStatus('Overweight')
+    } else if (bmi >= 30 || bmi <= 34.9) {
+      setBodyStatus('Obesity')
+    } else if (bmi > 35) {
+      setBodyStatus('Extreme Obese')
     }
 
     const date = new Date();
@@ -72,7 +88,7 @@ export default function Home() {
     }
 
     fetchData();
-  }, []);
+  }, [oasisStorage, bmi]);
 
   return (
     <>
@@ -90,20 +106,40 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-bold">{greeting}, {username} !</h1>
-              <p className="text-sm dark:text-lime-300 text-lime-600 font-bold">The sky is not the limit.</p>
+              <p className="text-sm dark:text-lime-300 text-lime-500 font-bold">The sky is not the limit.</p>
             </div>
           </div>
-          <div className=" bg-lime-300 dark:text-black  rounded-lg p-4 flex justify-between">
-            <div className="flex  flex-col items-center">
-              <span className="font-bold">34h23m</span>
-              <span className="text-xs text-gray-400">Time</span>
+          <div className=" bg-gradient-to-r from-lime-300 via-lime-200 to-emerald-50  dark:bg-gradient-to-l dark:from-lime-400 dark:via-lime-300 dark:to-lime-200 dark:text-black  rounded-lg p-4 flex justify-between">
+            <div
+              onClick={() => { router.push('/app/bmi') }}
+              className="flex  flex-col items-center">
+              <span className="font-bold">
+                {bmi ?
+                  (bmi) :
+                  (
+                    <>
+                      <span className='text-sm font-bold'>Get Now !</span>
+                    </>
+                  )}
+              </span>
+              {bmi ?
+                (
+                  <>
+                    <span className='text-xs font-bold'>{bodyStatus || null}</span>
+                  </>
+                ) :
+                (
+                  <>
+                    <span className='text-xs font-bold'>BMI</span>
+                  </>
+                )}
             </div>
             <div className="flex flex-col items-center">
-              <span className="font-bold">298</span>
+              <span className="font-bold">298232</span>
               <span className="text-xs text-gray-400">Value</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="font-bold">832</span>
+              <span className="font-bold">832342234</span>
               <span className="text-xs text-gray-400">L</span>
             </div>
           </div>

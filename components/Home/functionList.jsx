@@ -1,10 +1,17 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import * as motion from "motion/react-client"
 
 const gridItems = [
   {
     icon: 'Balance.png',
     title: "BMI Calculator",
+    desc: "BMI measures body fat using weight and height to evaluate health risk levels.",
+    path: "/app/bmi"
+  },
+  {
+    icon: 'Teacup_Without _Handle.png',
+    title: "Water Tracker",
     desc: "BMI measures body fat using weight and height to evaluate health risk levels.",
     path: "/app/bmi"
   },
@@ -18,9 +25,24 @@ export default function AppGridLayout() {
       <h3 className="flex items-center mt-8 mb-4 font-semibold text-2xl">
         <span className="flex-1">
           <div className="inline-block">
-            <Image src={'.././Wrench.png'} width={20} height={20} alt="Tools"></Image>
+            <motion.div
+              animate={{
+                scale: [1, 1.25, 1.25, 1, 1],
+                rotate: [0, 0, 180, 180, 0],
+                borderRadius: ["0%", "0%", "25%", "25%", "0%"],
+              }}
+              transition={{
+                duration: 2,
+                ease: "easeInOut",
+                times: [0, 0.2, 0.5, 0.8, 1],
+                repeat: Infinity,
+                repeatDelay: 1,
+              }}
+            >
+              <Image src={'.././Wrench.png'} width={20} height={20} alt="Tools"></Image>
+            </motion.div>
           </div>
-          {" "}Tools
+          {"  "}Tools
         </span>
       </h3>
       <div className="space-y-4">

@@ -14,6 +14,12 @@
   font-family: Torus;
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 @font-face {
   font-family: Torus;
   src: url('/torus.otf');

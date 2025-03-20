@@ -50,7 +50,7 @@ export default function ImageCarousel({
   }, [isPlaying, interval, goToNext])
 
   return (
-    <div className="relative w-full overflow-hidden h-64 ">
+    <div className="relative w-full 2xl:hidden xl:hidden lg:hidden overflow-hidden ">
       <div className="relative aspect-video">
         {images.map((image, index) => (
           <div
@@ -124,6 +124,7 @@ export default function ImageCarousel({
           ))}
         </div>
       )}
+      <br />
     </div>
   )
 }

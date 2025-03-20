@@ -144,7 +144,7 @@ const Init = () => {
           </div>
           <br />
           <p>
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold text-lime-600">Oasis</code> is a health tracking app specially designed for teenagers to help them maintain their healthy level. With the features like water intake tracking, BMI calculation and more.
+            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold dark:text-lime-300 text-lime-500">Oasis</code> is a health tracking app specially designed for teenagers to help them maintain their healthy level. With the features like water intake tracking, BMI calculation and more.
           </p>
         </Step>
         <Step>
