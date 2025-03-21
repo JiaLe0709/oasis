@@ -67,11 +67,11 @@ export default function Home() {
 
     if (bmi < 18.5) {
       setBodyStatus("Underweight")
-    } else if (bmi >= 18.5 || bmi <= 24.9) {
+    } else if (bmi >= 18.5 && bmi <= 24.9) {
       setBodyStatus('Normal Weight')
-    } else if (bmi >= 25 || bmi <= 29.9) {
+    } else if (bmi >= 25 && bmi <= 29.9) {
       setBodyStatus('Overweight')
-    } else if (bmi >= 30 || bmi <= 34.9) {
+    } else if (bmi >= 30 && bmi <= 34.9) {
       setBodyStatus('Obesity')
     } else if (bmi > 35) {
       setBodyStatus('Extreme Obese')

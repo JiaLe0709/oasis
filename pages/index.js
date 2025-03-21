@@ -23,9 +23,9 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 2850);
+    }, 2650);
     return () => clearInterval(interval);
-  }, [])
+  }, [images.length])
 
   useEffect(() => {
 
@@ -68,7 +68,7 @@ export default function Home() {
                 ease: "easeInOut",
                 times: [0, 0.2, 0.5, 0.8, 1],
                 repeat: Infinity,
-                repeatDelay: 1,
+                repeatDelay: 0,
               }}
             //animate={{ rotate: [0, 15, -15, 10, -10, 5, -5, 0] }}
             //transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}

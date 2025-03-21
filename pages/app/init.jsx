@@ -200,15 +200,15 @@ const Init = () => {
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem checked={gender === "Boy"} value="Boy" id="r1" />
-              <Label htmlFor="r1">Boy</Label>
+              <Label htmlFor="r1" className={`${gender === "Boy" && ('text-lime-500 font-bold dark:text-lime-300')}`}>Boy</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem checked={gender === "Girl"} value="Girl" id="r2" />
-              <Label htmlFor="r2">Girl</Label>
+              <Label htmlFor="r2" className={`${gender === "Girl" && ('text-lime-500 font-bold dark:text-lime-300')}`}>Girl</Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem checked={gender === ""} value={''} id="r3" />
-              <Label htmlFor="r3">Rather not to say.</Label>
+              <Label htmlFor="r3" className={`${gender === "" && ('text-lime-500 font-bold dark:text-lime-300')}`}>Rather not to say.</Label>
             </div>
           </RadioGroup>
           <br />
