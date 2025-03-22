@@ -31,6 +31,13 @@ export default function Home() {
 
     async function fetchData() {
       const storedUsername = await oasisStorage.get('username');
+      const totalWaterIntake = await oasisStorage.get("totalWaterIntake")
+
+      if (totalWaterIntake == null) {
+        oasisStorage.set("totalWaterIntake", 0)
+
+      }
+      
       if (storedUsername) {
         setIsLoading(true);
         router.push('/app/home');
@@ -84,7 +91,7 @@ export default function Home() {
               />
             </motion.div>
             <br />
-            <br/>
+            <br />
             <h1 className="text-5xl font-bold ">Oasis</h1>
             <ul className="list-inside  text-sm text-center sm:text-left">
               <li className="mb-2 p-8">

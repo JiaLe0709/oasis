@@ -1,4 +1,3 @@
-//import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { HiQuestionMarkCircle } from "react-icons/hi";
 import { Input } from "@/components/ui/input";
@@ -6,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
-import { PhotoProvider, PhotoView } from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
 import oasisStorage from "@/lib/storage";
 import BackBtn from "@/components/Home/backBtn";
@@ -14,90 +12,76 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { InfoIcon } from "lucide-react";
 import { Toaster, toast } from "sonner";
 
-export default function Bmi() {
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Progress } from "@/components/ui/progress";
 
-    //const router = useRouter();
+export default function WaterTracker() {
 
-    const [weight, setWeight] = useState('');
-    const [height, setHeight] = useState('');
-    const [bmi, setBmi] = useState(null);
+    const [gender, setGender] = useState(null)
+    const [waterIntakeRecord, setWaterIntakeRecord] = useState(null)
+    const [suggestedWaterIntake, setSuggestedWaterIntake] = useState(3000)
+    const [totalWaterIntake, setTotalWaterIntake] = useState(0)
+    const [totalWaterIntakeInPercentage, setTotalWaterIntakeInPercentage] = useState(0)
 
-    const [bodyStatus, setBodyStatus] = useState(null)
-    const [typeOfAlert, setTypeOfAlert] = useState('hidden');
-    const [advice, setAdvice] = useState('')
-
-    const [lastRecord, setLastRecord] = useState(null)
-
-    const calculateBmi = () => {
-        const bmiFormula = (weight / (height * height)).toFixed(2)
-
-        if (weight != '' && height != '') {
-            if (weight != 0 || height != 0) {
-                setLastRecord(null)
-                setBmi(bmiFormula)
-
-                if (bmiFormula < 18.5) {
-                    setBodyStatus("Underweight");
-                    setTypeOfAlert("bg-emerald-300 border-emerald-300 text-black");
-                    setAdvice("Eat a balanced diet with more calories to reach a healthier weight.");
-                } else if (bmiFormula >= 18.5 && bmiFormula <= 24.9) {
-                    setBodyStatus("Normal Weight");
-                    setTypeOfAlert("bg-lime-400 border-lime-400 text-black");
-                    setAdvice("Well done! Maintain a balanced diet and stay active for good health.");
-                } else if (bmiFormula >= 25 && bmiFormula <= 29.9) {
-                    setBodyStatus("Overweight");
-                    setTypeOfAlert("bg-yellow-500 border-yellow-500 text-black");
-                    setAdvice("Exercise regularly and eat healthy foods to manage your weight effectively.");
-                } else if (bmiFormula >= 30 && bmiFormula <= 34.9) {
-                    setBodyStatus("Obesity");
-                    setTypeOfAlert("bg-orange-500 border-orange-500 text-white");
-                    setAdvice("Focus on healthy eating and physical activity to improve your well-being.");
-                } else if (bmiFormula > 35) {
-                    setBodyStatus("Extreme Obese");
-                    setTypeOfAlert("bg-red-500 border-red-500 text-white");
-                    setAdvice("Seek medical advice and adopt a healthier lifestyle for better long-term health.");
-                }
-
-                // Date
-                const currentDate = new Date();
-                const currentDayOfMonth = currentDate.getDate();
-                const currentMonth = currentDate.getMonth();
-                const currentYear = currentDate.getFullYear();
-                const date = currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
-
-                oasisStorage.set("bmiRecordDate", date)
-                oasisStorage.set("weight", weight)
-                oasisStorage.set("height", height)
-                oasisStorage.set("bmi", bmiFormula)
-            } else {
-                toast.error('Invalid Input Entered !')
-            }
-        } else {
-            toast.error('Invalid Input Entered !')
-        }
-    }
+    const [selectedAmount, setSelectedAmount] = useState(0)
 
     useEffect(() => {
         async function fetchData() {
-            const lastRecordDate = await oasisStorage.get('bmiRecordDate');
-            if (lastRecordDate) {
-                const bmiValue = await oasisStorage.get('bmi');
-                const weight = await oasisStorage.get('weight');
-                const height = await oasisStorage.get('height');
+            const gender = await oasisStorage.get("gender")
+            //const waterIntakeRecord = await oasisStorage.get("waterIntakeRecord")
+            const dbtotalWaterIntake = await oasisStorage.get("totalWaterIntake")
 
-                setLastRecord({
-                    'lastRecordDate': lastRecordDate,
-                    'bmiValue': bmiValue,
-                    'weight': weight,
-                    'height': height
-                } || null)
-            } else {
-                setLastRecord(null)
+            //console.log("db: ", dbtotalWaterIntake)
+            if (dbtotalWaterIntake) {
+                setGender(gender)
+                setTotalWaterIntake(dbtotalWaterIntake)
             }
         }
 
         fetchData()
     }, [oasisStorage])
+
+    // Init: Select Categories or extra: custom target (/)
+    useEffect(() => {
+        if (gender == '') {
+            setSuggestedWaterIntake(3000)
+        } else if (gender == 'Boy') {
+            setSuggestedWaterIntake(3300)
+        } else if (gender == 'Girl') {
+            setSuggestedWaterIntake(2400)
+        } else {
+            setSuggestedWaterIntake(3000)
+        }
+
+    }, [gender])
+
+    // Init: progress bar （/)
+    useEffect(() => {
+        const calculation = (totalWaterIntake / suggestedWaterIntake) * 100
+
+        //console.log(calculation)
+
+        if ((calculation) > 100) {
+            setTotalWaterIntakeInPercentage(100)
+        } else {
+            setTotalWaterIntakeInPercentage((totalWaterIntake / suggestedWaterIntake) * 100)
+        }
+
+    }, [suggestedWaterIntake, totalWaterIntake])
+
+    // fx to excute
+    const handleWaterIntake = () => {
+        const newTotalWaterIntake = selectedAmount + totalWaterIntake
+
+        if (totalWaterIntakeInPercentage > 100) {
+            setTotalWaterIntakeInPercentage(100)
+        } else {
+            setTotalWaterIntakeInPercentage((newTotalWaterIntake / suggestedWaterIntake) * 100)
+        }
+
+        setTotalWaterIntake(newTotalWaterIntake)
+        oasisStorage.set("totalWaterIntake", newTotalWaterIntake)
+    }
 
     return (
         <>
@@ -110,7 +94,7 @@ export default function Bmi() {
                         <BackBtn />
                     </div>
                     <div className="inline-block">
-                        <Image src={'.././Teacup_Without _Handle.png'} width={30} height={30} alt="BMI"></Image>
+                        <Image src={'.././Teacup_Without _Handle.png'} width={30} height={30} alt="tea"></Image>
                     </div>
                     <span className="ml-2">Water Tracker</span>
                     <Drawer>
@@ -120,20 +104,16 @@ export default function Bmi() {
                         <DrawerContent>
                             <DrawerHeader>
                                 <DrawerTitle className="text-xl">
-                                    What is <span className="text-lime-500 font-bold dark:text-lime-300">BMI</span> ?
+                                    What is <span className="text-lime-500 font-bold dark:text-lime-300">Water Tracker</span> ?
                                 </DrawerTitle>
                                 <DrawerDescription>
                                     <p className="text-base">
-                                        Body mass index (BMI) is a value <span className="text-lime-500 font-bold dark:text-lime-300">derived</span> from the <span className="text-lime-500 font-bold dark:text-lime-300">mass (weight)</span> and <span className="text-lime-500 font-bold dark:text-lime-300">height</span> of a person. The BMI is defined as the body mass divided by the square of the body height, and is expressed in units of <span className="text-lime-500 font-bold dark:text-lime-300">kg/m²</span>, resulting from mass in kilograms (kg) and height in metres (m).
+                                        Water Tracker is designed to <span className="text-lime-500 font-bold dark:text-lime-300">help busy teenagers stay hydrated</span> throughout the day. With their packed schedules and constant focus on studies, social media, or other activities, they often forget to drink enough water.
                                     </p>
                                     <br />
-                                    <p className="text-base w-full  items-center justify-center ">
-                                        The BMI may be determined first by measuring its components by means of a weighing scale and a stadiometer. The multiplication and division may be carried out directly, by hand or using a calculator.
+                                    <p className="text-base">
+                                        So, The Water Tracker <span className="text-lime-500 font-bold dark:text-lime-300">serves as a recorder & reminder</span> to drink water regularly, ensuring users <span className="text-lime-500 font-bold dark:text-lime-300">maintain proper hydration</span>.
                                     </p>
-                                    <i>Resources from: </i>
-                                    <a href="https://en.wikipedia.org/wiki/Body_mass_index" target="_blank">
-                                        <span className="text-lime-500 font-bold dark:text-lime-300">Wikipedia</span>
-                                    </a>
                                 </DrawerDescription>
                             </DrawerHeader>
                             <DrawerFooter>
@@ -148,90 +128,87 @@ export default function Bmi() {
                 </h1>
                 <div className="w-full max-w-sm items-center gap-2">
                     <p className="text-sm">
-                    Water Tracker can ensure that a teenager's daily water intake is sufficient.
+                        Water Tracker can ensure that a teenager's daily water intake is sufficient.
                     </p>
-                    {lastRecord && (
-                        <>
+                    <br />
+                    <Tabs defaultValue="tracker" className="">
+                        <TabsList className={'bg-[#F4F4F5] dark:bg-[#27272A]'}>
+                            <TabsTrigger value="tracker">Tracker</TabsTrigger>
+                            <TabsTrigger value="record">Record</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="tracker">
                             <br />
-                            <Alert className={'bg-green-200 border-green-200 text-black'}>
-                                <AlertTitle className={'font-bold'}>Last BMI Record Found !</AlertTitle>
-                                <AlertDescription>
-                                    {`Record Date: ${lastRecord?.lastRecordDate}`}
-                                    <br />
-                                    {`Weight: ${lastRecord?.weight} kg`}
-                                    <br />
-                                    {`Height: ${lastRecord?.height} m`}
-                                    <br />
-                                    {`BMI: ${lastRecord?.bmiValue}`}
-                                </AlertDescription>
-                            </Alert>
-                        </>
-                    )
-                    }
-                    {typeOfAlert && (
-                        <>
                             <br />
-                            <Alert className={typeOfAlert}>
-                                <AlertTitle className={'font-bold'}>{bodyStatus} ! ({bmi})</AlertTitle>
-                                <AlertDescription>
-                                    {advice}
-                                </AlertDescription>
-                            </Alert>
+                            <div className="text-center">
+                                <h3 className="text-4xl text-lime-500 font-bold dark:text-lime-300">{totalWaterIntake} ml</h3>
+                                <p className=" text-gray-500 dark:text-gray-400">of {suggestedWaterIntake} ml</p>
+                            </div>
                             <br />
-                        </>
-                    )}
-                    <Label htmlFor="weight">Weight (Kg) :</Label>
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-sm">
+                                    <span>Progress</span>
+                                    <span>{totalWaterIntake ? (((totalWaterIntake / suggestedWaterIntake) * 100).toFixed(2)) : (0)} %</span>
+                                </div>
+                                <Progress value={totalWaterIntake ? (totalWaterIntakeInPercentage) : (0)} className="h-3" />
+                            </div>
+                            <br />
+                            <div className="space-y-4">
+                                <div className="flex justify-center space-x-2">
+                                    <Button
+                                        onClick={() => setSelectedAmount(100)}
+                                        className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 100 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
+                                    >
+                                        100 ml
+                                    </Button>
+                                    <Button
+                                        onClick={() => setSelectedAmount(250)}
+                                        className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 250 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
+                                    >
+                                        250 ml
+                                    </Button>
+                                    <Button
+                                        onClick={() => setSelectedAmount(500)}
+                                        className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 500 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
+                                    >
+                                        500 ml
+                                    </Button>
+
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <Button
+                                onClick={() => handleWaterIntake()}
+                                className="flex-1 w-full justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold"
+                            >
+                                Add
+                            </Button>
+                        </TabsContent>
+                        <TabsContent value="record">
+                            <p className="text-xl font-bold">Your water intake history for today</p>
+                            <br />
+                            {waterIntakeRecord ? (
+                                <>
+                                    found !
+                                </>
+                            ) : (
+                                <>
+                                    <br />
+                                    <div className="flex items-center justify-center">
+                                        <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
+                                    </div>
+                                    <p className="text-base text-center">
+                                        No Drink Record Found !
+                                    </p>
+                                    <br />
+                                </>
+                            )}
+                        </TabsContent>
+                    </Tabs>
                     <br />
-                    <Input
-                        type={'number'}
-                        value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
-                        placeholder="Your weight (kg) ?"
-                        required
-                        id="weight"
-                        variant="secondary"
-                    />
-                    <br />
-                    <Label htmlFor="height">Height (m) :</Label>
-                    <br />
-                    <Input
-                        type={'number'}
-                        value={height}
-                        onChange={(e) => setHeight(e.target.value)}
-                        placeholder="Your height (m) ?"
-                        required
-                        id="height"
-                        variant="secondary"
-                    />
-                    <br />
-                    <Button
-                        onClick={() => { calculateBmi() }}
-                        className={'duration-350 w-full items-center justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold'}
-                    >
-                        Calculate
-                    </Button>
-                    <br />
-                    <br />
-                    <PhotoProvider>
-                        <PhotoView src={'./../obesity_graph.png'}>
-                            <Image
-                                alt="Obesity Graph"
-                                className="w-full hidden h-auto rounded-lg "
-                                height="200"
-                                src={'./../obesity_graph.png'}
-                                style={{
-                                    objectFit: "cover",
-                                }}
-                                width="368"
-                            />
-                        </PhotoView>
-                    </PhotoProvider>
-                    <i className="text-sm hidden">
-                        Image of the status of body based on BMI.
-                    </i>
                     <footer className="flex items-center justify-center  p-4 text-xs text-gray-500 dark:text-gray-400">
                         <InfoIcon className="mr-2 h-4 w-4" />
-                        <span>BMI is a screening tool, not a diagnostic of body fatness or health.</span>
+                        <span>The water intake suggestion is just a reference.</span>
                     </footer>
                 </div>
             </div>

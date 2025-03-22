@@ -66,8 +66,8 @@ export default function Bmi() {
                 const date = currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
 
                 oasisStorage.set("bmiRecordDate", date)
-                oasisStorage.set("weight", weight)
-                oasisStorage.set("height", height)
+                oasisStorage.set("weight", parseFloat(weight).toFixed(2))
+                oasisStorage.set("height", parseFloat(height).toFixed(2))
                 oasisStorage.set("bmi", bmiFormula)
             } else {
                 toast.error('Invalid Input Entered !')
