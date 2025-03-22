@@ -12,8 +12,8 @@ const gridItems = [
   {
     icon: 'Teacup_Without _Handle.png',
     title: "Water Tracker",
-    desc: "BMI measures body fat using weight and height to evaluate health risk levels.",
-    path: "/app/bmi"
+    desc: "Water Tracker can ensure that a teenager's daily water intake is sufficient.",
+    path: "/app/water_tracker"
   },
 ];
 

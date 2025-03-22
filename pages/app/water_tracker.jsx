@@ -110,9 +110,9 @@ export default function Bmi() {
                         <BackBtn />
                     </div>
                     <div className="inline-block">
-                        <Image src={'.././Balance.png'} width={30} height={30} alt="BMI"></Image>
+                        <Image src={'.././Teacup_Without _Handle.png'} width={30} height={30} alt="BMI"></Image>
                     </div>
-                    <span className="ml-2">BMI Calculator</span>
+                    <span className="ml-2">Water Tracker</span>
                     <Drawer>
                         <DrawerTrigger>
                             <HiQuestionMarkCircle className="h-4 w-4 ml-2" />
@@ -148,7 +148,7 @@ export default function Bmi() {
                 </h1>
                 <div className="w-full max-w-sm items-center gap-2">
                     <p className="text-sm">
-                        Body Mass Index (BMI) is commonly used as a screening tool to categorize individuals into different weight ranges, such as underweight, normal weight, overweight, and obesity.
+                    Water Tracker can ensure that a teenager's daily water intake is sufficient.
                     </p>
                     {lastRecord && (
                         <>
