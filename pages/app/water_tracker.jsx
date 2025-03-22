@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { HiQuestionMarkCircle } from "react-icons/hi";
+import { BsCupHotFill } from "react-icons/bs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
@@ -30,6 +31,23 @@ export default function WaterTracker() {
             const gender = await oasisStorage.get("gender")
             //const waterIntakeRecord = await oasisStorage.get("waterIntakeRecord")
             const dbtotalWaterIntake = await oasisStorage.get("totalWaterIntake")
+            const waterIntakeDate = await oasisStorage.get("WaterIntakeDate")
+
+            if (waterIntakeDate) {
+                const [day, month, year] = waterIntakeDate.split("-").map(Number);
+                const storedDate = new Date(year, month - 1, day);
+
+                const currentDate = new Date();
+                currentDate.setHours(0, 0, 0, 0);
+
+                if (storedDate.getTime() === currentDate.getTime()) {
+                    console.log("The stored date is today.");
+                } else {
+                    oasisStorage.remove("WaterIntakeDate")
+                    oasisStorage.remove("totalWaterIntake")
+                    oasisStorage.remove("waterIntakeRecord")
+                }
+            }
 
             //console.log("db: ", dbtotalWaterIntake)
             if (dbtotalWaterIntake) {
@@ -73,6 +91,12 @@ export default function WaterTracker() {
     const handleWaterIntake = () => {
         const newTotalWaterIntake = selectedAmount + totalWaterIntake
 
+        const currentDate = new Date();
+        const currentDayOfMonth = currentDate.getDate();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        const date = currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
+
         if (totalWaterIntakeInPercentage > 100) {
             setTotalWaterIntakeInPercentage(100)
         } else {
@@ -80,6 +104,7 @@ export default function WaterTracker() {
         }
 
         setTotalWaterIntake(newTotalWaterIntake)
+        oasisStorage.set("WaterIntakeDate", date)
         oasisStorage.set("totalWaterIntake", newTotalWaterIntake)
     }
 
@@ -152,32 +177,36 @@ export default function WaterTracker() {
                                 <Progress value={totalWaterIntake ? (totalWaterIntakeInPercentage) : (0)} className="h-3" />
                             </div>
                             <br />
-                            <div className="space-y-4">
-                                <div className="flex justify-center space-x-2">
-                                    <Button
-                                        onClick={() => setSelectedAmount(100)}
-                                        className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 100 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
-                                    >
-                                        100 ml
-                                    </Button>
-                                    <Button
-                                        onClick={() => setSelectedAmount(250)}
-                                        className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 250 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
-                                    >
-                                        250 ml
-                                    </Button>
-                                    <Button
-                                        onClick={() => setSelectedAmount(500)}
-                                        className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 500 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
-                                    >
-                                        500 ml
-                                    </Button>
+                            <div className="space-y-2">
+                                <p className="text-sm">Select the cup size of water you drink in.</p>
+                                <div className="space-y-4">
+                                    <div className="flex justify-center space-x-2">
+                                        <Button
+                                            onClick={() => setSelectedAmount(100)}
+                                            className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 100 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
+                                        >
+                                            <Image src={'./../Cup_with_Straw.png'} width={20} height={20} alt="cup"></Image>100 ml
+                                        </Button>
+                                        <Button
+                                            onClick={() => setSelectedAmount(250)}
+                                            className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 250 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
+                                        >
+                                            <Image src={'./../Cup_with_Straw.png'} width={25} height={25} alt="cup"></Image>250 ml
+                                        </Button>
+                                        <Button
+                                            onClick={() => setSelectedAmount(500)}
+                                            className={`flex-1 justify-center rounded-[10px] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold ${selectedAmount === 500 ? 'bg-lime-200' : 'bg-[#bef264]'}`}
+                                        >
+                                            <Image src={'./../Cup_with_Straw.png'} width={28} height={28} alt="cup"></Image>500 ml
+                                        </Button>
 
+                                    </div>
                                 </div>
                             </div>
                             <br />
                             <br />
                             <Button
+                                disabled={selectedAmount == 0}
                                 onClick={() => handleWaterIntake()}
                                 className="flex-1 w-full justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold"
                             >
