@@ -1,8 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+// import { Label } from "@/components/ui/label";
+// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Toaster, toast } from "sonner";
-
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress";
@@ -14,8 +12,8 @@ import { useState, useEffect } from "react";
 import { HiQuestionMarkCircle } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { LocalNotifications } from "@capacitor/local-notifications";
-import { Switch } from "@/components/ui/switch"
+// import { LocalNotifications } from "@capacitor/local-notifications";
+// import { Switch } from "@/components/ui/switch"
 
 export default function WaterTracker() {
 
@@ -26,20 +24,7 @@ export default function WaterTracker() {
     const [totalWaterIntakeInPercentage, setTotalWaterIntakeInPercentage] = useState(0)
 
     const [selectedAmount, setSelectedAmount] = useState(0)
-    const [checked, setChecked] = useState(false)
-
-    useEffect(() => {
-        const fetchScheduledNotifications = async () => {
-            try {
-                const pending = await LocalNotifications.getPending();
-                console.log(pending)
-            } catch (error) {
-                console.error("Error fetching scheduled notifications:", error);
-            }
-        };
-
-        fetchScheduledNotifications();
-    }, []);
+    //const [checked, setChecked] = useState(false)
 
     useEffect(() => {
         async function fetchData() {
@@ -49,13 +34,13 @@ export default function WaterTracker() {
             const waterIntakeRecord = await oasisStorage.get("waterIntakeRecord")
             const dbtotalWaterIntake = await oasisStorage.get("totalWaterIntake")
             const waterIntakeDate = await oasisStorage.get("WaterIntakeDate")
-            const waterIntakeAlert = await oasisStorage.get("notification")
+            //const waterIntakeAlert = await oasisStorage.get("notification")
 
             // Constant Data is set [no matters is latest or not]
             setGender(gender)
             setTotalWaterIntake(dbtotalWaterIntake)
             setWaterIntakeRecord(waterIntakeRecord)
-            setChecked(waterIntakeAlert)
+            //setChecked(waterIntakeAlert)
 
             // Data Found 
             if (waterIntakeDate) {
@@ -157,18 +142,21 @@ export default function WaterTracker() {
         oasisStorage.set("WaterIntakeDate", date)
         oasisStorage.set("totalWaterIntake", newTotalWaterIntake)
 
+        /* 
         const allowNotification = await oasisStorage.get('notification')
         if (allowNotification) {
-            const nextNotificationTime = addOneHour(`${hours}:${minutes}:${seconds}`)
+            const nextNotificationTime = addFiveSec(`${hours}:${minutes}:${seconds}`)
             console.log(nextNotificationTime)
             scheduleDrinkWaterNotification(nextNotificationTime)
         }
+        */
 
         setSelectedAmount(0)
         setTotalWaterIntake(newTotalWaterIntake)
         setWaterIntakeRecord([...waterIntakeRecord, newWaterRecord])
     }
 
+    /* 
     const TestNotification = async () => {
         try {
             // Request permission
@@ -207,7 +195,7 @@ export default function WaterTracker() {
                     id: Date.now(),
                     title: "Drink Water Reminder 💧",
                     body: "It's time to drink some water!",
-                    schedule: { at: nextTime },
+                    schedule: { at: new Date(Date.now() + 5000) },
                     sound: null,
                     smallIcon: "res://drawable/icon",
                     largeIcon: "res://drawable/icon"
@@ -223,8 +211,7 @@ export default function WaterTracker() {
         now.setHours(hours, minutes, seconds, 0);
         now.setHours(now.getHours() + 1);
         return now;
-    }
-
+    } */
 
     return (
         <>
@@ -255,7 +242,7 @@ export default function WaterTracker() {
                                     </p>
                                     <br />
                                     <p className="text-base">
-                                        So, The Water Tracker <span className="text-lime-500 font-bold dark:text-lime-300">serves as a recorder & reminder</span> to drink water regularly, ensuring users <span className="text-lime-500 font-bold dark:text-lime-300">maintain proper hydration</span>.
+                                        So, The Water Tracker <span className="text-lime-500 font-bold dark:text-lime-300">serves as a recorder</span> to drink water regularly, ensuring users <span className="text-lime-500 font-bold dark:text-lime-300">maintain proper hydration</span>.
                                     </p>
                                 </DrawerDescription>
                             </DrawerHeader>
@@ -278,7 +265,7 @@ export default function WaterTracker() {
                         <TabsList className={'bg-[#F4F4F5] dark:bg-[#27272A]'}>
                             <TabsTrigger value="tracker">Tracker</TabsTrigger>
                             <TabsTrigger value="record">Record</TabsTrigger>
-                            <TabsTrigger value="reminder">Reminder</TabsTrigger>
+                            {/*<TabsTrigger value="reminder">Reminder</TabsTrigger>*/}
                         </TabsList>
                         <TabsContent value="tracker">
                             <br />
@@ -367,7 +354,7 @@ export default function WaterTracker() {
                                     </>
                                 )}</div>
                         </TabsContent>
-                        <TabsContent value="reminder">
+                        {/* <TabsContent value="reminder">
                             <p className="text-xl font-bold">Reminder</p>
                             <br />
                             <div className="flex items-center justify-between">
@@ -410,7 +397,7 @@ export default function WaterTracker() {
                             >
                                 Test
                             </Button>
-                        </TabsContent>
+                        </TabsContent> */}
                     </Tabs>
                     <br />
                     <footer className="flex items-center justify-center  p-4 text-xs text-gray-500 dark:text-gray-400">
