@@ -15,6 +15,7 @@ import { HiQuestionMarkCircle } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { LocalNotifications } from "@capacitor/local-notifications";
+import { Switch } from "@/components/ui/switch"
 
 export default function WaterTracker() {
 
@@ -25,6 +26,20 @@ export default function WaterTracker() {
     const [totalWaterIntakeInPercentage, setTotalWaterIntakeInPercentage] = useState(0)
 
     const [selectedAmount, setSelectedAmount] = useState(0)
+    const [checked, setChecked] = useState(false)
+
+    useEffect(() => {
+        const fetchScheduledNotifications = async () => {
+            try {
+                const pending = await LocalNotifications.getPending();
+                console.log(pending)
+            } catch (error) {
+                console.error("Error fetching scheduled notifications:", error);
+            }
+        };
+
+        fetchScheduledNotifications();
+    }, []);
 
     useEffect(() => {
         async function fetchData() {
@@ -34,11 +49,13 @@ export default function WaterTracker() {
             const waterIntakeRecord = await oasisStorage.get("waterIntakeRecord")
             const dbtotalWaterIntake = await oasisStorage.get("totalWaterIntake")
             const waterIntakeDate = await oasisStorage.get("WaterIntakeDate")
+            const waterIntakeAlert = await oasisStorage.get("notification")
 
             // Constant Data is set [no matters is latest or not]
             setGender(gender)
             setTotalWaterIntake(dbtotalWaterIntake)
             setWaterIntakeRecord(waterIntakeRecord)
+            setChecked(waterIntakeAlert)
 
             // Data Found 
             if (waterIntakeDate) {
@@ -140,6 +157,13 @@ export default function WaterTracker() {
         oasisStorage.set("WaterIntakeDate", date)
         oasisStorage.set("totalWaterIntake", newTotalWaterIntake)
 
+        const allowNotification = await oasisStorage.get('notification')
+        if (allowNotification) {
+            const nextNotificationTime = addOneHour(`${hours}:${minutes}:${seconds}`)
+            console.log(nextNotificationTime)
+            scheduleDrinkWaterNotification(nextNotificationTime)
+        }
+
         setSelectedAmount(0)
         setTotalWaterIntake(newTotalWaterIntake)
         setWaterIntakeRecord([...waterIntakeRecord, newWaterRecord])
@@ -150,7 +174,9 @@ export default function WaterTracker() {
             // Request permission
             const permission = await LocalNotifications.requestPermissions();
             if (permission.display !== "granted") {
+                oasisStorage.set("notification", false)
                 toast.error("Permission denied for notifications.");
+                setChecked(false)
                 return;
             }
 
@@ -173,6 +199,32 @@ export default function WaterTracker() {
             toast.error("Error while sending notification !");
         }
     };
+
+    const scheduleDrinkWaterNotification = async (nextTime) => {
+        await LocalNotifications.schedule({
+            notifications: [
+                {
+                    id: Date.now(),
+                    title: "Drink Water Reminder 💧",
+                    body: "It's time to drink some water!",
+                    schedule: { at: nextTime },
+                    sound: null,
+                    smallIcon: "res://drawable/icon",
+                    largeIcon: "res://drawable/icon"
+                },
+            ],
+        });
+
+    };
+
+    function addOneHour(timeStr) {
+        let [hours, minutes, seconds] = timeStr.split(":").map(Number);
+        let now = new Date();
+        now.setHours(hours, minutes, seconds, 0);
+        now.setHours(now.getHours() + 1);
+        return now;
+    }
+
 
     return (
         <>
@@ -316,7 +368,48 @@ export default function WaterTracker() {
                                 )}</div>
                         </TabsContent>
                         <TabsContent value="reminder">
-                            <button onClick={() => {TestNotification()}}>Test</button>
+                            <p className="text-xl font-bold">Reminder</p>
+                            <br />
+                            <div className="flex items-center justify-between">
+                                <div className="space-y-0.5">
+                                    <Label htmlFor="reminder-toggle font-bold">Hourly Reminders</Label>
+                                    <p className="text-sm text-muted-foreground">Receive notifications to drink water</p>
+                                </div>
+                                <Switch id="reminder-toggle"
+                                    checked={checked}
+                                    onCheckedChange={async () => {
+                                        setChecked((checked == true) ? (false) : (true))
+                                        await oasisStorage.set("notification", (checked == true) ? (false) : (true))
+                                        const waterRecordlength = waterIntakeRecord.length
+                                        if ((waterRecordlength != 0) && await oasisStorage.get('notification')) {
+                                            const lastTimeDrinkWater = waterIntakeRecord[(waterRecordlength - 1)].timestamp
+                                            const nextNotificationTime = addOneHour(lastTimeDrinkWater)
+                                            console.log(nextNotificationTime)
+                                            scheduleDrinkWaterNotification(nextNotificationTime)
+                                        }
+                                    }}
+                                />
+                            </div>
+                            <br />
+                            <Alert>
+                                <AlertTitle className={'font-bold'}>
+                                    <InfoIcon className="w-4 h-4 mr-2 inline-block" />
+                                    Note !
+                                </AlertTitle>
+                                <AlertDescription>
+                                    - The notification will reset everyday
+                                    <br />
+                                    - It only will alrt until 10PM
+                                </AlertDescription>
+                            </Alert>
+                            <br />
+                            <Button
+                                disabled={!checked}
+                                onClick={() => TestNotification()}
+                                className="flex-1 w-full justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold"
+                            >
+                                Test
+                            </Button>
                         </TabsContent>
                     </Tabs>
                     <br />
