@@ -4,7 +4,6 @@ import AppGridLayout from '@/components/Home/functionList';
 import Avatar from 'boring-avatars';
 import confetti from 'canvas-confetti';
 import { useRouter } from 'next/router';
-import * as motion from "motion/react-client"
 
 export default function Home() {
   const router = useRouter();
@@ -13,6 +12,9 @@ export default function Home() {
   const [greeting, setGreeting] = useState('');
   const [bmi, setBmi] = useState(null)
   const [bodyStatus, setBodyStatus] = useState(null)
+  const [waterIntake, setWaterIntake] = useState(null)
+  const [gender, setGender] = useState(null)
+  const [suggestedWaterIntake, setSuggestedWaterIntake] = useState(0)
 
   const [routerEvent, setRouterEvent] = useState('')
 
@@ -60,9 +62,13 @@ export default function Home() {
     async function fetchData() {
       const storedUsername = await oasisStorage.get('username');
       const bmiValue = await oasisStorage.get('bmi');
+      const dbtotalWaterIntake = await oasisStorage.get("totalWaterIntake")
+      const gender = await oasisStorage.get("gender")
 
       setUsername(storedUsername || null)
       setBmi(bmiValue || null)
+      setWaterIntake(dbtotalWaterIntake || null)
+      setGender(gender || null)
     }
 
     if (bmi < 18.5) {
@@ -87,8 +93,18 @@ export default function Home() {
       setGreeting('Good Evening');
     }
 
+    if (gender == '') {
+      setSuggestedWaterIntake(3000)
+    } else if (gender == 'Boy') {
+      setSuggestedWaterIntake(3300)
+    } else if (gender == 'Girl') {
+      setSuggestedWaterIntake(2400)
+    } else {
+      setSuggestedWaterIntake(3000)
+    }
+
     fetchData();
-  }, [oasisStorage, bmi]);
+  }, [oasisStorage, bmi, gender]);
 
   return (
     <>
@@ -135,8 +151,19 @@ export default function Home() {
                 )}
             </div>
             <div className="flex flex-col items-center">
-              <span className="font-bold">298232</span>
-              <span className="text-xs text-gray-400">Value</span>
+              <span className="font-bold">{waterIntake ? (`${waterIntake} ml`) : (<span className='text-sm font-bold'>Drink Now !</span>)}</span>
+              <span className="text-xs ">
+                {waterIntake ? (
+                  <>
+                    <span className='text-xs font-bold text-gray-900 dark:text-gray-800'>{(`of ${suggestedWaterIntake} ml`) || null}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className='text-xs font-bold'>Water Tracker</span>
+                  </>
+                )
+                }
+              </span>
             </div>
             <div className="flex flex-col items-center">
               <span className="font-bold">832342234</span>

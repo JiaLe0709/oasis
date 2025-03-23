@@ -1,25 +1,23 @@
-import { useState, useEffect } from "react";
-import { HiQuestionMarkCircle } from "react-icons/hi";
-import { BsCupHotFill } from "react-icons/bs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
-import 'react-photo-view/dist/react-photo-view.css';
-import oasisStorage from "@/lib/storage";
-import BackBtn from "@/components/Home/backBtn";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { InfoIcon } from "lucide-react";
 import { Toaster, toast } from "sonner";
 
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress";
+import { InfoIcon } from "lucide-react";
+import BackBtn from "@/components/Home/backBtn";
+import Image from "next/image";
+import oasisStorage from "@/lib/storage";
+import { useState, useEffect } from "react";
+import { HiQuestionMarkCircle } from "react-icons/hi";
+import { Button } from "@/components/ui/button";
 
 export default function WaterTracker() {
 
     const [gender, setGender] = useState(null)
-    const [waterIntakeRecord, setWaterIntakeRecord] = useState(null)
+    const [waterIntakeRecord, setWaterIntakeRecord] = useState([])
     const [suggestedWaterIntake, setSuggestedWaterIntake] = useState(3000)
     const [totalWaterIntake, setTotalWaterIntake] = useState(0)
     const [totalWaterIntakeInPercentage, setTotalWaterIntakeInPercentage] = useState(0)
@@ -28,31 +26,45 @@ export default function WaterTracker() {
 
     useEffect(() => {
         async function fetchData() {
+
+            // Obtain Data
             const gender = await oasisStorage.get("gender")
-            //const waterIntakeRecord = await oasisStorage.get("waterIntakeRecord")
+            const waterIntakeRecord = await oasisStorage.get("waterIntakeRecord")
             const dbtotalWaterIntake = await oasisStorage.get("totalWaterIntake")
             const waterIntakeDate = await oasisStorage.get("WaterIntakeDate")
 
+            // Constant Data is set [no matters is latest or not]
+            setGender(gender)
+            setTotalWaterIntake(dbtotalWaterIntake)
+            setWaterIntakeRecord(waterIntakeRecord)
+
+            // Data Found 
             if (waterIntakeDate) {
+                // Handle Date
                 const [day, month, year] = waterIntakeDate.split("-").map(Number);
                 const storedDate = new Date(year, month - 1, day);
-
                 const currentDate = new Date();
                 currentDate.setHours(0, 0, 0, 0);
 
+                // Handle Update based on Date
                 if (storedDate.getTime() === currentDate.getTime()) {
                     console.log("The stored date is today.");
                 } else {
-                    oasisStorage.remove("WaterIntakeDate")
-                    oasisStorage.remove("totalWaterIntake")
-                    oasisStorage.remove("waterIntakeRecord")
-                }
-            }
+                    // Init Date format (latest)
+                    const currentDayOfMonth = currentDate.getDate();
+                    const currentMonth = currentDate.getMonth();
+                    const currentYear = currentDate.getFullYear();
+                    const date = currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
 
-            //console.log("db: ", dbtotalWaterIntake)
-            if (dbtotalWaterIntake) {
-                setGender(gender)
-                setTotalWaterIntake(dbtotalWaterIntake)
+                    // remove(set) old data (update to latest....)
+                    await oasisStorage.set("WaterIntakeDate", date)
+                    await oasisStorage.set("totalWaterIntake", 0)
+                    await oasisStorage.set("waterIntakeRecord", [])
+
+                    // Update State (latest)
+                    setWaterIntakeRecord([])
+                    setTotalWaterIntake(0)
+                }
             }
         }
 
@@ -73,7 +85,8 @@ export default function WaterTracker() {
 
     }, [gender])
 
-    // Init: progress bar （/)
+    // Init: progress bar - wont affect data （/)
+    // const : sWI, variable: tWI
     useEffect(() => {
         const calculation = (totalWaterIntake / suggestedWaterIntake) * 100
 
@@ -87,25 +100,46 @@ export default function WaterTracker() {
 
     }, [suggestedWaterIntake, totalWaterIntake])
 
-    // fx to excute
-    const handleWaterIntake = () => {
-        const newTotalWaterIntake = selectedAmount + totalWaterIntake
+    // fx to excute (user click)
+    const handleWaterIntake = async () => {
 
+        // Date Init
         const currentDate = new Date();
         const currentDayOfMonth = currentDate.getDate();
         const currentMonth = currentDate.getMonth();
         const currentYear = currentDate.getFullYear();
         const date = currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
 
+        // Total Amount of water intake
+        const newTotalWaterIntake = selectedAmount + totalWaterIntake
+
+        // Update State for progression bar
         if (totalWaterIntakeInPercentage > 100) {
             setTotalWaterIntakeInPercentage(100)
         } else {
             setTotalWaterIntakeInPercentage((newTotalWaterIntake / suggestedWaterIntake) * 100)
         }
 
-        setTotalWaterIntake(newTotalWaterIntake)
+        // Generate Timestamp
+        const hours = currentDate.getHours();
+        const minutes = currentDate.getMinutes();
+        const seconds = currentDate.getSeconds();
+
+        // get Array & set Array
+        const waterIntakeRecord = (await oasisStorage.get("waterIntakeRecord")) || [];
+        const newWaterRecord =
+        {
+            'timestamp': `${hours}:${minutes}:${seconds}`,
+            'amount': selectedAmount,
+        }
+
+        // Update Data & State
+        oasisStorage.set("waterIntakeRecord", [...waterIntakeRecord, newWaterRecord])
         oasisStorage.set("WaterIntakeDate", date)
         oasisStorage.set("totalWaterIntake", newTotalWaterIntake)
+
+        setTotalWaterIntake(newTotalWaterIntake)
+        setWaterIntakeRecord([...waterIntakeRecord, newWaterRecord])
     }
 
     return (
@@ -160,6 +194,7 @@ export default function WaterTracker() {
                         <TabsList className={'bg-[#F4F4F5] dark:bg-[#27272A]'}>
                             <TabsTrigger value="tracker">Tracker</TabsTrigger>
                             <TabsTrigger value="record">Record</TabsTrigger>
+                            <TabsTrigger value="reminder">Reminder</TabsTrigger>
                         </TabsList>
                         <TabsContent value="tracker">
                             <br />
@@ -216,7 +251,7 @@ export default function WaterTracker() {
                         <TabsContent value="record">
                             <p className="text-xl font-bold">Your water intake history for today</p>
                             <br />
-                            {waterIntakeRecord ? (
+                            {(waterIntakeRecord?.length > 0) ? (
                                 <>
                                     found !
                                 </>
@@ -232,6 +267,9 @@ export default function WaterTracker() {
                                     <br />
                                 </>
                             )}
+                        </TabsContent>
+                        <TabsContent value="reminder">
+
                         </TabsContent>
                     </Tabs>
                     <br />

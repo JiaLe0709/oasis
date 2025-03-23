@@ -32,12 +32,13 @@ export default function Home() {
     async function fetchData() {
       const storedUsername = await oasisStorage.get('username');
       const totalWaterIntake = await oasisStorage.get("totalWaterIntake")
+      const waterIntakeRecord = await oasisStorage.get("waterIntakeRecord")
 
-      if (totalWaterIntake == null) {
+      if (totalWaterIntake == null && waterIntakeRecord == null) {
         oasisStorage.set("totalWaterIntake", 0)
-
+        oasisStorage.set("waterIntakeRecord", [])
       }
-      
+
       if (storedUsername) {
         setIsLoading(true);
         router.push('/app/home');
