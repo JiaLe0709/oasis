@@ -13,6 +13,8 @@ import oasisStorage from "@/lib/storage";
 import { useState, useEffect } from "react";
 import { HiQuestionMarkCircle } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { LocalNotifications } from "@capacitor/local-notifications";
 
 export default function WaterTracker() {
 
@@ -138,9 +140,40 @@ export default function WaterTracker() {
         oasisStorage.set("WaterIntakeDate", date)
         oasisStorage.set("totalWaterIntake", newTotalWaterIntake)
 
+        setSelectedAmount(0)
         setTotalWaterIntake(newTotalWaterIntake)
         setWaterIntakeRecord([...waterIntakeRecord, newWaterRecord])
     }
+
+    const TestNotification = async () => {
+        try {
+            // Request permission
+            const permission = await LocalNotifications.requestPermissions();
+            if (permission.display !== "granted") {
+                toast.error("Permission denied for notifications.");
+                return;
+            }
+
+            // Schedule notification using config values
+            await LocalNotifications.schedule({
+                notifications: [
+                    {
+                        id: 1,
+                        title: "Default Sound Notification",
+                        body: "This notification uses the phone's default sound!",
+                        schedule: { at: new Date(Date.now() + 1000) },
+                        sound: null,
+                        smallIcon: "icon",
+                        largeIcon: "icon",
+                    },
+                ],
+            });
+
+            toast.success("Notification Tested !");
+        } catch (error) {
+            toast.error("Error scheduling notification:", error);
+        }
+    };
 
     return (
         <>
@@ -245,31 +278,46 @@ export default function WaterTracker() {
                                 onClick={() => handleWaterIntake()}
                                 className="flex-1 w-full justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold"
                             >
+                                <Plus />
                                 Add
                             </Button>
                         </TabsContent>
                         <TabsContent value="record">
                             <p className="text-xl font-bold">Your water intake history for today</p>
                             <br />
-                            {(waterIntakeRecord?.length > 0) ? (
-                                <>
-                                    found !
-                                </>
-                            ) : (
-                                <>
-                                    <br />
-                                    <div className="flex items-center justify-center">
-                                        <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
-                                    </div>
-                                    <p className="text-base text-center">
-                                        No Drink Record Found !
-                                    </p>
-                                    <br />
-                                </>
-                            )}
+                            <div className="space-y-4">
+                                {(waterIntakeRecord?.length > 0) ? (
+                                    waterIntakeRecord.map((record, index) => (
+                                        <div
+                                            key={index}
+                                            className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
+                                        >
+                                            <div className="flex justify-between text-sm">
+                                                <span>
+                                                    {(record?.amount == 100) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={20} height={20} alt="cup"></Image>)}
+                                                    {(record?.amount == 250) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={25} height={25} alt="cup"></Image>)}
+                                                    {(record?.amount == 500) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={28} height={28} alt="cup"></Image>)}
+                                                    {record?.amount} ml
+                                                </span>
+                                                <span>{record?.timestamp}</span>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <>
+                                        <br />
+                                        <div className="flex items-center justify-center">
+                                            <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
+                                        </div>
+                                        <p className="text-base text-center">
+                                            No Drink Record Found !
+                                        </p>
+                                        <br />
+                                    </>
+                                )}</div>
                         </TabsContent>
                         <TabsContent value="reminder">
-
+                            <button onClick={() => {TestNotification()}}>Test</button>
                         </TabsContent>
                     </Tabs>
                     <br />

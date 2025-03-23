@@ -150,7 +150,10 @@ export default function Home() {
                   </>
                 )}
             </div>
-            <div className="flex flex-col items-center">
+            <div
+              onClick={() => { router.push('/app/water_tracker') }}
+              className="flex flex-col items-center"
+            >
               <span className="font-bold">{waterIntake ? (`${waterIntake} ml`) : (<span className='text-sm font-bold'>Drink Now !</span>)}</span>
               <span className="text-xs ">
                 {waterIntake ? (
