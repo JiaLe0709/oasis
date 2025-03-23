@@ -8,7 +8,7 @@ import oasisStorage from '@/lib/storage';
 export default function Home() {
 
   const images = [
-    "favicon.ico",
+    "icon.png",
     "summer.png",
     "autumn.png",
     "winter.png",

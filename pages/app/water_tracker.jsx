@@ -159,19 +159,18 @@ export default function WaterTracker() {
                 notifications: [
                     {
                         id: 1,
-                        title: "Default Sound Notification",
-                        body: "This notification uses the phone's default sound!",
-                        schedule: { at: new Date(Date.now() + 1000) },
+                        title: "Hello from Oasis !",
+                        body: "This notification uses for test !",
                         sound: null,
-                        smallIcon: "icon",
-                        largeIcon: "icon",
+                        smallIcon: "res://drawable/icon",
+                        largeIcon: "res://drawable/icon",
                     },
                 ],
             });
 
             toast.success("Notification Tested !");
         } catch (error) {
-            toast.error("Error scheduling notification:", error);
+            toast.error("Error while sending notification !");
         }
     };
 
