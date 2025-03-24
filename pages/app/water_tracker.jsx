@@ -230,7 +230,9 @@ export default function WaterTracker() {
                     <span className="ml-2">Water Tracker</span>
                     <Drawer>
                         <DrawerTrigger>
-                            <HiQuestionMarkCircle className="h-4 w-4 ml-2" />
+                            <span className="text-sky-600 font-bold dark:text-cyan-400">
+                                <HiQuestionMarkCircle className="h-4 w-4 ml-2" />
+                            </span>
                         </DrawerTrigger>
                         <DrawerContent>
                             <DrawerHeader>
@@ -285,7 +287,7 @@ export default function WaterTracker() {
                             </div>
                             <br />
                             <div className="space-y-2">
-                                <p className="text-sm">Select the cup size of water you drink in ml.</p>
+                                <p className="text-sm">Select / type amount of water you drink in. (ml)</p>
                                 <div className="space-y-4">
                                     <div className="flex justify-center space-x-2">
                                         <Button
@@ -311,6 +313,7 @@ export default function WaterTracker() {
                                     <Input
                                         type={'number'}
                                         value={selectedAmount}
+                                        className={'dark:border-lime-300 border-lime-500'}
                                         onChange={(e) => setSelectedAmount(e.target.value)}
                                         placeholder="Custom water drink"
                                         required

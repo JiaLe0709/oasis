@@ -115,7 +115,9 @@ export default function Bmi() {
                     <span className="ml-2">BMI Calculator</span>
                     <Drawer>
                         <DrawerTrigger>
-                            <HiQuestionMarkCircle className="h-4 w-4 ml-2" />
+                            <span className="text-sky-600 font-bold dark:text-cyan-400">
+                                <HiQuestionMarkCircle className="h-4 w-4 ml-2" />
+                            </span>
                         </DrawerTrigger>
                         <DrawerContent>
                             <DrawerHeader>
