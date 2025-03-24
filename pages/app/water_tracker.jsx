@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { HiQuestionMarkCircle } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 // import { LocalNotifications } from "@capacitor/local-notifications";
 // import { Switch } from "@/components/ui/switch"
 
@@ -115,7 +116,7 @@ export default function WaterTracker() {
         const date = currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
 
         // Total Amount of water intake
-        const newTotalWaterIntake = selectedAmount + totalWaterIntake
+        const newTotalWaterIntake = Number(selectedAmount) + totalWaterIntake
 
         // Update State for progression bar
         if (totalWaterIntakeInPercentage > 100) {
@@ -284,7 +285,7 @@ export default function WaterTracker() {
                             </div>
                             <br />
                             <div className="space-y-2">
-                                <p className="text-sm">Select the cup size of water you drink in.</p>
+                                <p className="text-sm">Select the cup size of water you drink in ml.</p>
                                 <div className="space-y-4">
                                     <div className="flex justify-center space-x-2">
                                         <Button
@@ -307,6 +308,15 @@ export default function WaterTracker() {
                                         </Button>
 
                                     </div>
+                                    <Input
+                                        type={'number'}
+                                        value={selectedAmount}
+                                        onChange={(e) => setSelectedAmount(e.target.value)}
+                                        placeholder="Custom water drink"
+                                        required
+                                        id="water"
+                                        variant="secondary"
+                                    />
                                 </div>
                             </div>
                             <br />
@@ -335,6 +345,9 @@ export default function WaterTracker() {
                                                     {(record?.amount == 100) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={20} height={20} alt="cup"></Image>)}
                                                     {(record?.amount == 250) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={25} height={25} alt="cup"></Image>)}
                                                     {(record?.amount == 500) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={28} height={28} alt="cup"></Image>)}
+                                                    {(record?.amount !== 100 && record?.amount !== 250 && record?.amount !== 500) && (
+                                                        <Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={30} height={30} alt="cup" />
+                                                    )}
                                                     {record?.amount} ml
                                                 </span>
                                                 <span>{record?.timestamp}</span>
