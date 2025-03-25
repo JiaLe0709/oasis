@@ -29,6 +29,7 @@ export default function Home() {
     return Math.random() * (max - min) + min;
   }
 
+  // Handle condition activate confetti animation
   useEffect(() => {
     if (routerEvent == 'success') {
       const interval = setInterval(() => {
@@ -58,16 +59,44 @@ export default function Home() {
     }
   }, [router])
 
+  // Init Data
   useEffect(() => {
     async function fetchData() {
       const storedUsername = await oasisStorage.get('username');
       const bmiValue = await oasisStorage.get('bmi');
       const dbtotalWaterIntake = await oasisStorage.get("totalWaterIntake")
       const gender = await oasisStorage.get("gender")
+      const waterIntakeDate = await oasisStorage.get("WaterIntakeDate")
+
+      if (waterIntakeDate) {
+        // Handle Date
+        const [day, month, year] = waterIntakeDate.split("-").map(Number);
+        const storedDate = new Date(year, month - 1, day);
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+
+        // Handle Update based on Date
+        if (storedDate.getTime() === currentDate.getTime()) {
+          setWaterIntake(dbtotalWaterIntake || null)
+        } else {
+          // Init Date format (latest)
+          const currentDayOfMonth = currentDate.getDate();
+          const currentMonth = currentDate.getMonth();
+          const currentYear = currentDate.getFullYear();
+          const date = currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
+
+          // remove(set) old data (update to latest....)
+          await oasisStorage.set("WaterIntakeDate", date)
+          await oasisStorage.set("totalWaterIntake", 0)
+          await oasisStorage.set("waterIntakeRecord", [])
+
+          // Update State (latest)
+          setWaterIntake(0)
+        }
+      }
 
       setUsername(storedUsername || null)
       setBmi(bmiValue || null)
-      setWaterIntake(dbtotalWaterIntake || null)
       setGender(gender || null)
     }
 

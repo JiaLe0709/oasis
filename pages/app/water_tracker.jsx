@@ -53,7 +53,7 @@ export default function WaterTracker() {
 
                 // Handle Update based on Date
                 if (storedDate.getTime() === currentDate.getTime()) {
-                    console.log("The stored date is today.");
+                    return
                 } else {
                     // Init Date format (latest)
                     const currentDayOfMonth = currentDate.getDate();
@@ -325,7 +325,7 @@ export default function WaterTracker() {
                             <br />
                             <br />
                             <Button
-                                disabled={selectedAmount == 0}
+                                disabled={selectedAmount <= 0}
                                 onClick={() => handleWaterIntake()}
                                 className="flex-1 w-full justify-center rounded-full bg-[#bef264] py-1.5 px-3.5 font-medium tracking-tight text-black transition font-bold"
                             >
