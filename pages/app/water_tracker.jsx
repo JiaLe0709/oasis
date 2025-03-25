@@ -274,14 +274,14 @@ export default function WaterTracker() {
                             <br />
                             <br />
                             <div className="text-center">
-                                <h3 className="text-4xl text-lime-500 font-bold dark:text-lime-300">{totalWaterIntake} ml</h3>
+                                <h3 className="text-4xl text-lime-500 font-bold dark:text-lime-300">{totalWaterIntake.toFixed(2)} ml</h3>
                                 <p className=" text-gray-500 dark:text-gray-400">of {suggestedWaterIntake} ml</p>
                             </div>
                             <br />
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
                                     <span>Progress</span>
-                                    <span>{totalWaterIntake ? (((totalWaterIntake / suggestedWaterIntake) * 100).toFixed(2)) : (0)} %</span>
+                                    <span>{totalWaterIntake ? ((((totalWaterIntake / suggestedWaterIntake) * 100).toFixed(2)) >= 100 ? (100) : (((totalWaterIntake / suggestedWaterIntake) * 100).toFixed(2))) : (0)} %</span>
                                 </div>
                                 <Progress value={totalWaterIntake ? (totalWaterIntakeInPercentage) : (0)} className="h-3" />
                             </div>
