@@ -155,7 +155,7 @@ export default function Bmi() {
                     {lastRecord && (
                         <>
                             <br />
-                            <Alert className={'bg-green-200 border-green-200 text-black'}>
+                            <Alert className={'bg-gradient-to-r from-violet-200 to-pink-200 border-none text-black'}>
                                 <AlertTitle className={'font-bold'}>Last BMI Record Found !</AlertTitle>
                                 <AlertDescription>
                                     {`Record Date: ${lastRecord?.lastRecordDate}`}

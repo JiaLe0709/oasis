@@ -15,6 +15,12 @@ const gridItems = [
     desc: "Water Tracker can ensure that a teenager's daily water intake is sufficient.",
     path: "/app/water_tracker"
   },
+  {
+    icon: 'Sandwich.png',
+    title: "Calories Calculator",
+    desc: "A calorie calculator helps teenagers measure meal calories for a day.",
+    path: "/app/calories_calculator"
+  },
 ];
 
 export default function AppGridLayout() {

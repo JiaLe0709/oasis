@@ -314,11 +314,21 @@ export default function WaterTracker() {
                                         type={'number'}
                                         value={selectedAmount}
                                         className={'dark:border-lime-300 border-lime-500'}
-                                        onChange={(e) => setSelectedAmount(e.target.value)}
                                         placeholder="Custom water drink"
                                         required
                                         id="water"
                                         variant="secondary"
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (/^\d*\.?\d{0,2}$/.test(value)) {
+                                                setSelectedAmount(value);
+                                            }
+                                        }}
+                                        onBlur={(e) => {
+                                            if (e.target.value) {
+                                                setSelectedAmount(parseFloat(e.target.value).toFixed(2));
+                                            }
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -345,12 +355,7 @@ export default function WaterTracker() {
                                         >
                                             <div className="flex justify-between text-sm">
                                                 <span>
-                                                    {(record?.amount == 100) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={20} height={20} alt="cup"></Image>)}
-                                                    {(record?.amount == 250) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={25} height={25} alt="cup"></Image>)}
-                                                    {(record?.amount == 500) && (<Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={28} height={28} alt="cup"></Image>)}
-                                                    {(record?.amount !== 100 && record?.amount !== 250 && record?.amount !== 500) && (
-                                                        <Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={30} height={30} alt="cup" />
-                                                    )}
+                                                    <Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={30} height={30} alt="cup" />
                                                     {record?.amount} ml
                                                 </span>
                                                 <span>{record?.timestamp}</span>

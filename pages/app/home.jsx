@@ -4,6 +4,7 @@ import AppGridLayout from '@/components/Home/functionList';
 import Avatar from 'boring-avatars';
 import confetti from 'canvas-confetti';
 import { useRouter } from 'next/router';
+import { Scale, Flame, Droplet, ChevronRight } from "lucide-react"
 
 export default function Home() {
   const router = useRouter();
@@ -154,7 +155,83 @@ export default function Home() {
               <p className="text-sm dark:text-lime-300 text-lime-500 font-bold">The sky is not the limit.</p>
             </div>
           </div>
-          <div className=" bg-gradient-to-r from-lime-300 via-lime-200 to-emerald-50  dark:bg-gradient-to-l dark:from-lime-400 dark:via-lime-300 dark:to-lime-200 dark:text-black  rounded-lg p-4 flex justify-between">
+          <div className="space-y-6 border-lg border-gray-800  p-2 ">
+            <div className="grid grid-cols-3 gap-4">
+              <div
+                className="flex flex-col"
+                onClick={() => { router.push('/app/bmi') }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Scale className="h-5 w-5 text-yellow-400" />
+                    <span className="text-sm font-bold">BMI</span>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <div className="text-2xl font-semibold">{bmi || '-'}</div>
+                  <div className="text-sm  text-stone-800 dark:text-gray-400">{bmi ? bodyStatus : "Measure now !"}</div>
+                </div>
+              </div>
+              <div
+                className="flex flex-col"
+                onClick={() => { router.push('/app/water_tracker') }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Droplet className="h-5 w-5 text-blue-400" />
+                    <span className="text-sm font-bold">Hydration</span>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <div className="text-2xl font-semibold">
+                    {waterIntake ? (
+                      ((waterIntake.toString()).length > 5) ? (`${(waterIntake.toString()).slice(0, 7) + "..."}`) : (waterIntake)
+
+                    ) : (
+                      0
+                    )
+                    }
+                  </div>
+                  <div className="text-sm  text-stone-800 dark:text-gray-400">
+                    {waterIntake ? (`of ${suggestedWaterIntake} ml`) || null : "Drink Now !"}
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex flex-col"
+                onClick={() => { router.push('/app/calories_calculator') }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Flame className="h-5 w-5 text-orange-500" />
+                    <span className="text-sm font-bold">Calories</span>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <div className="text-2xl font-semibold">11</div>
+                  <div className="text-sm  text-stone-800 dark:text-gray-400">/400 kcal</div>
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-gray-800"></div>
+            <div 
+            className="flex items-center justify-between"
+            onClick={() => { router.push('/app/profile') }}
+            >
+              <div className="flex items-center gap-2">
+                <div className="h-5 w-5 flex items-center justify-center">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4a2 2 0 100-4 2 2 0 000 4z" fill="#4ade80" />
+                    <path d="M10 6h4v14h-4z" fill="#4ade80" />
+                    <path d="M6 14h12v4H6z" fill="#4ade80" />
+                  </svg>
+                </div>
+                <span>Health Profile</span>
+              </div>
+              <ChevronRight className="h-5 w-5 text-gray-500" />
+            </div>
+          </div>
+          {/*<div className=" bg-gradient-to-r from-lime-300 via-lime-200 to-emerald-50  dark:bg-gradient-to-l dark:from-lime-400 dark:via-lime-300 dark:to-lime-200 dark:text-black  rounded-lg p-4 flex justify-between">
             <div
               onClick={() => { router.push('/app/bmi') }}
               className="flex  flex-col items-center">
@@ -201,7 +278,7 @@ export default function Home() {
               <span className="font-bold">832342234</span>
               <span className="text-xs text-gray-400">L</span>
             </div>
-          </div>
+          </div>*/}
           <AppGridLayout />
         </div>
       </div>
