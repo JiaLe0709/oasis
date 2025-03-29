@@ -5,6 +5,7 @@ import Avatar from 'boring-avatars';
 import confetti from 'canvas-confetti';
 import { useRouter } from 'next/router';
 import { Scale, Flame, Droplet, ChevronRight } from "lucide-react"
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
@@ -14,8 +15,10 @@ export default function Home() {
   const [bmi, setBmi] = useState(null)
   const [bodyStatus, setBodyStatus] = useState(null)
   const [waterIntake, setWaterIntake] = useState(null)
+  const [caloriesIntake, setCaloriesIntake] = useState(null)
   const [gender, setGender] = useState(null)
   const [suggestedWaterIntake, setSuggestedWaterIntake] = useState(0)
+  const [suggestedCaloriesIntake, setSuggestedCaloriesIntake] = useState(0)
 
   const [routerEvent, setRouterEvent] = useState('')
 
@@ -68,6 +71,8 @@ export default function Home() {
       const dbtotalWaterIntake = await oasisStorage.get("totalWaterIntake")
       const gender = await oasisStorage.get("gender")
       const waterIntakeDate = await oasisStorage.get("WaterIntakeDate")
+      const totalCaloriesIntake = await oasisStorage.get("totalCaloriesIntake")
+      const caloriesIntakeDate = await oasisStorage.get("caloriesIntakeDate")
 
       if (waterIntakeDate) {
         // Handle Date
@@ -93,6 +98,34 @@ export default function Home() {
 
           // Update State (latest)
           setWaterIntake(0)
+        }
+      }
+
+      if (caloriesIntakeDate) {
+        // Handle Date
+        const [day, month, year] = caloriesIntakeDate.split("-").map(Number);
+        const storedDate = new Date(year, month - 1, day);
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+
+        // Handle Update based on Date
+        
+        if (storedDate.getTime() === currentDate.getTime()) {
+          setCaloriesIntake(totalCaloriesIntake || null)
+        } else {
+          // Init Date format (latest)
+          const currentDayOfMonth = currentDate.getDate();
+          const currentMonth = currentDate.getMonth();
+          const currentYear = currentDate.getFullYear();
+          const date = currentDayOfMonth + "-" + (currentMonth + 1) + "-" + currentYear;
+
+          // remove(set) old data (update to latest....)
+          await oasisStorage.set("caloriesIntakeDate", date)
+          await oasisStorage.set("totalCaloriesIntake", 0)
+          await oasisStorage.set("caloriesIntakeRecord", [])
+
+          // Update State (latest)
+          setCaloriesIntake(0)
         }
       }
 
@@ -125,11 +158,15 @@ export default function Home() {
 
     if (gender == '') {
       setSuggestedWaterIntake(3000)
+      setSuggestedCaloriesIntake(2600)
     } else if (gender == 'Boy') {
+      setSuggestedCaloriesIntake(2800)
       setSuggestedWaterIntake(3300)
     } else if (gender == 'Girl') {
+      setSuggestedCaloriesIntake(2400)
       setSuggestedWaterIntake(2400)
     } else {
+      setSuggestedCaloriesIntake(2600)
       setSuggestedWaterIntake(3000)
     }
 
@@ -185,7 +222,7 @@ export default function Home() {
                 <div className="mt-2">
                   <div className="text-2xl font-semibold">
                     {waterIntake ? (
-                      ((waterIntake.toString()).length > 5) ? (`${(waterIntake.toString()).slice(0, 7) + "..."}`) : (waterIntake)
+                      ((waterIntake.toString()).length > 7) ? (`${(waterIntake.toString()).slice(0, 7) + "..."}`) : (waterIntake)
 
                     ) : (
                       0
@@ -208,23 +245,26 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="mt-2">
-                  <div className="text-2xl font-semibold">11</div>
-                  <div className="text-sm  text-stone-800 dark:text-gray-400">/400 kcal</div>
+                  <div className="text-2xl font-semibold">
+                    {caloriesIntake ? (
+                      ((caloriesIntake.toString()).length > 7) ? (`${(caloriesIntake.toString()).slice(0, 7) + "..."}`) : (caloriesIntake)
+
+                    ) : (
+                      0
+                    )
+                    }
+                  </div>
+                  <div className="text-sm  text-stone-800 dark:text-gray-400">{caloriesIntake ? (`of ${suggestedCaloriesIntake} kcal`) || null : "Measure now !"}</div>
                 </div>
               </div>
             </div>
-            <div className="border-t border-gray-800"></div>
-            <div 
-            className="flex items-center justify-between"
-            onClick={() => { router.push('/app/profile') }}
+            <div
+              className="flex items-center justify-between"
+              onClick={() => { router.push('/app/profile') }}
             >
               <div className="flex items-center gap-2">
-                <div className="h-5 w-5 flex items-center justify-center">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 4a2 2 0 100-4 2 2 0 000 4z" fill="#4ade80" />
-                    <path d="M10 6h4v14h-4z" fill="#4ade80" />
-                    <path d="M6 14h12v4H6z" fill="#4ade80" />
-                  </svg>
+                <div className="flex items-center justify-center">
+                  <Image src="./../Beating_Heart.png" height={35} width={35} alt="profile" />
                 </div>
                 <span>Health Profile</span>
               </div>

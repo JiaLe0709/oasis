@@ -130,7 +130,7 @@ export default function Bmi() {
                                     </p>
                                     <br />
                                     <p className="text-base w-full  items-center justify-center ">
-                                        The BMI may be determined first by measuring its components by means of a weighing scale and a stadiometer. The multiplication and division may be carried out directly, by hand or using a calculator.
+                                    Body Mass Index (BMI) is commonly used as a <span className="text-lime-500 font-bold dark:text-lime-300">screening tool</span> to <span className="text-lime-500 font-bold dark:text-lime-300">categorize individuals into different weight ranges</span>, such as underweight, normal weight, overweight, and obesity.
                                     </p>
                                     <i>Resources from: </i>
                                     <a href="https://en.wikipedia.org/wiki/Body_mass_index" target="_blank">
@@ -149,9 +149,6 @@ export default function Bmi() {
                     </Drawer>
                 </h1>
                 <div className="w-full max-w-sm items-center gap-2">
-                    <p className="text-sm">
-                        Body Mass Index (BMI) is commonly used as a screening tool to categorize individuals into different weight ranges, such as underweight, normal weight, overweight, and obesity.
-                    </p>
                     {lastRecord && (
                         <>
                             <br />

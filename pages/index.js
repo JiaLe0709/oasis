@@ -47,9 +47,17 @@ export default function Home() {
       const totalWaterIntake = await oasisStorage.get("totalWaterIntake")
       const waterIntakeRecord = await oasisStorage.get("waterIntakeRecord")
 
+      const caloriesIntake = await oasisStorage.get("totalCaloriesIntake")
+      const caloriesRecord = await oasisStorage.get("caloriesIntakeRecord")
+
       if (totalWaterIntake == null && waterIntakeRecord == null) {
         oasisStorage.set("totalWaterIntake", 0)
         oasisStorage.set("waterIntakeRecord", [])
+      }
+
+      if (caloriesIntake == null && caloriesRecord == null) {
+        oasisStorage.set("totalCaloriesIntake", 0)
+        oasisStorage.set("caloriesIntakeRecord", [])
       }
 
       if (storedUsername) {

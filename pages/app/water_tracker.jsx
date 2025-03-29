@@ -245,7 +245,7 @@ export default function WaterTracker() {
                                     </p>
                                     <br />
                                     <p className="text-base">
-                                        So, The Water Tracker <span className="text-lime-500 font-bold dark:text-lime-300">serves as a recorder</span> to drink water regularly, ensuring users <span className="text-lime-500 font-bold dark:text-lime-300">maintain proper hydration</span>.
+                                        So, The Water Tracker <span className="text-lime-500 font-bold dark:text-lime-300">serves as a recorder</span> to store a drinking record for a day, ensuring teenagers <span className="text-lime-500 font-bold dark:text-lime-300">maintain proper hydration</span>.
                                     </p>
                                 </DrawerDescription>
                             </DrawerHeader>
@@ -260,12 +260,9 @@ export default function WaterTracker() {
                     </Drawer>
                 </h1>
                 <div className="w-full max-w-sm items-center gap-2">
-                    <p className="text-sm">
-                        Water Tracker can ensure that a teenager's daily water intake is sufficient.
-                    </p>
                     <br />
                     <Tabs defaultValue="tracker" className="">
-                        <TabsList className={'bg-[#F4F4F5] dark:bg-[#27272A]'}>
+                        <TabsList className={'bg-[#F4F4F5] dark:bg-[#27272A] w-full'}>
                             <TabsTrigger value="tracker">Tracker</TabsTrigger>
                             <TabsTrigger value="record">Record</TabsTrigger>
                             {/*<TabsTrigger value="reminder">Reminder</TabsTrigger>*/}
@@ -274,7 +271,7 @@ export default function WaterTracker() {
                             <br />
                             <br />
                             <div className="text-center">
-                                <h3 className="text-4xl text-lime-500 font-bold dark:text-lime-300">{totalWaterIntake.toFixed(2)} ml</h3>
+                                <h3 className="text-4xl text-lime-500 font-bold dark:text-lime-300">{totalWaterIntake} ml</h3>
                                 <p className=" text-gray-500 dark:text-gray-400">of {suggestedWaterIntake} ml</p>
                             </div>
                             <br />
@@ -344,6 +341,7 @@ export default function WaterTracker() {
                             </Button>
                         </TabsContent>
                         <TabsContent value="record">
+                            <br />
                             <p className="text-xl font-bold">Your water intake history for today</p>
                             <br />
                             <div className="space-y-4">
