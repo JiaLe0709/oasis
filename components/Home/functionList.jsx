@@ -57,7 +57,7 @@ export default function AppGridLayout() {
             key={index}
             onClick={() => router.push(item.path)}
             // def white f8f9fb f4f4f5
-            className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
+            className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#1C1C1C] #1F2123 dark:hover:bg-[#101112] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
           >
             <div className="flex items-center gap-4">
               <Image src={`.././${item.icon}`} width={30} height={30} alt={item.title} />

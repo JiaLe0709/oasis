@@ -9,11 +9,23 @@ import { Toaster, toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer"
 import { CaloriesList } from "@/lib/calories";
+import { Progress } from "@/components/ui/progress";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus } from "lucide-react";
 
 export default function CaloriesCalculator() {
 
     const [gender, setGender] = useState(null)
     const [suggestedCaloriesIntake, setSuggestedCaloriesIntake] = useState(0)
+
+    const [calorieIntakeInMorning, setCalorieIntakeInMorning] = useState(0)
+    const [calorieIntakeInAfternoon, setCalorieIntakeInAfternoon] = useState(0)
+    const [calorieIntakeInNight, setCalorieIntakeInNight] = useState(0)
+    const [calorieIntakeInTotal, setCalorieIntakeInTotal] = useState(0)
+
+    // UI
+    const [isVisible, setIsVisible] = useState(true)
 
     useEffect(() => {
         async function fetchData() {
@@ -26,6 +38,7 @@ export default function CaloriesCalculator() {
 
         }
 
+        //console.log(CaloriesList.fruits.map((item) => item.name).join(", "))
         fetchData()
     }, [oasisStorage])
 
@@ -42,6 +55,16 @@ export default function CaloriesCalculator() {
         }
 
     }, [gender])
+
+    const date = new Date()
+    const day = date.getDate()
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
+    const currentDate = `${day}/${month}/${year}`
+
+    const handleAddCaloriesRecord = (name, calories) => {
+        setCalorieIntakeInTotal(calories + calorieIntakeInTotal)
+    }
 
     return (
         <>
@@ -91,17 +114,81 @@ export default function CaloriesCalculator() {
                     <Tabs defaultValue="all">
                         <TabsList className={'bg-[#F4F4F5] dark:bg-[#27272A] w-full'}>
                             <TabsTrigger value="all">All</TabsTrigger>
-                            <TabsTrigger value="morning">Morning</TabsTrigger>
-                            <TabsTrigger value="after">Afternoon</TabsTrigger>
-                            <TabsTrigger value="night">Night</TabsTrigger>
+                            <TabsTrigger value="record">Record</TabsTrigger>
                         </TabsList>
                         <TabsContent value="all">
+                            <br />
+                            <div className="text-center">
+                                <h3 className={`text-4xl font-bold ${(calorieIntakeInTotal > suggestedCaloriesIntake) ? ('text-red-600') : ('text-lime-500 dark:text-lime-300')}`}>{Number(calorieIntakeInTotal).toFixed(2)} kcal</h3>
+                                <p className=" text-gray-500 dark:text-gray-400">of {suggestedCaloriesIntake} kcal</p>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="font-bold"> </span>
+                                <Popover side="top">
+                                    <PopoverTrigger>
+                                        <div className="dark:bg-[#1C1C1C] bg-[#F9FBF8] backdrop-blur-[10px] p-2 rounded-lg justify-center flex items-center gap-2">
+                                            <Image src={'.././Cookie.png'} width={28.5} height={28.5} alt="cookie" /><span className="font-bold">x {Math.round(Number(calorieIntakeInTotal / 150))}</span>
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent side="top">
+                                        {"1 🍪 ≈ 150 kcal"}
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                            <br />
+                            <div className="space-y-1">
+                                <div className="flex justify-between text-sm">
+                                    <span className="font-bold">Calories Intake ({currentDate})</span>
+                                    <span>{(calorieIntakeInTotal / suggestedCaloriesIntake * 100) >= 100 ? (100) : (Number(calorieIntakeInTotal / suggestedCaloriesIntake * 100).toFixed(2))} %</span>
+                                </div>
+                                <Progress value={(calorieIntakeInTotal / suggestedCaloriesIntake * 100) >= 100 ? (100) : ((calorieIntakeInTotal / suggestedCaloriesIntake * 100))} className="h-3" />
+                            </div>
+                            <br />
+                            <div className="grid backdrop-blur-xs grid-cols-3 gap-2 text-center text-sm bg-cover bg-no-repeat bg-center  bg-[url('/DAN.png')] bg-[length:100%_100%] rounded-md p-1">
+                                <div className="rounded-md bg-muted p-2">
+                                    <div className="font-bold text-black">Morning</div>
+                                    <div  className="font-bold text-black">{calorieIntakeInMorning} kcal</div>
+                                </div>
+                                <div className="rounded-md bg-muted p-2">
+                                    <div className="font-bold text-black">Afternoon</div>
+                                    <div className="font-bold text-black">{calorieIntakeInAfternoon} kcal</div>
+                                </div>
+                                <div className="rounded-md bg-muted p-2">
+                                    <div className="font-bold">Night</div>
+                                    <div className="font-bold">{calorieIntakeInNight} kcal</div>
+                                </div>
+                            </div>
+                            <br />
+                            {CaloriesList.fruits.map((item, key) => (
+                                <div key={key} className={`flex items-center space-y-2 justify-between`}>
+                                    <div className="flex items-center space-x-2">
+                                        <Image
+                                            alt={item.name}
+                                            className="h-15 w-15 rounded-md"
+                                            height="60"
+                                            src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/Fruits/${item.image}`}
+                                            style={{
+                                                aspectRatio: "60/60",
+                                                objectFit: "cover",
+                                            }}
+                                            width="60"
+                                        />
+                                        <div>
+                                            <div className="text-lg font-bold">{item.name}</div>
+                                            <div className="text-sm">{item.calories} kcal</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Button
+                                            onClick={() => handleAddCaloriesRecord(item.name, item.calories)}
+                                        >
+                                            <Plus className="mr-2 h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            ))}
                         </TabsContent>
-                        <TabsContent value="morning">
-                        </TabsContent>
-                        <TabsContent value="afternoon">
-                        </TabsContent>
-                        <TabsContent value="night">
+                        <TabsContent value="record">
                         </TabsContent>
                     </Tabs>
                     <br />
@@ -110,7 +197,7 @@ export default function CaloriesCalculator() {
                         <span>The calories intake suggestion is just a reference.</span>
                     </footer>
                 </div>
-            </div>
+            </div >
         </>
     );
 }

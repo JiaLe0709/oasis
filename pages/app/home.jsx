@@ -109,7 +109,7 @@ export default function Home() {
         currentDate.setHours(0, 0, 0, 0);
 
         // Handle Update based on Date
-        
+
         if (storedDate.getTime() === currentDate.getTime()) {
           setCaloriesIntake(totalCaloriesIntake || null)
         } else {
@@ -215,7 +215,7 @@ export default function Home() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Droplet className="h-5 w-5 text-blue-400" />
+                    <Image src="./../Droplet.png" className='h-5 w-5' height={35} width={35} alt="profile" />
                     <span className="text-sm font-bold">Hydration</span>
                   </div>
                 </div>
@@ -240,7 +240,7 @@ export default function Home() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Flame className="h-5 w-5 text-orange-500" />
+                    <Image src="./../Fire.png" className='h-5 w-5' height={35} width={35} alt="profile" />
                     <span className="text-sm font-bold">Calories</span>
                   </div>
                 </div>

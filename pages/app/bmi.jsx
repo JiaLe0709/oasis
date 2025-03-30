@@ -151,7 +151,6 @@ export default function Bmi() {
                 <div className="w-full max-w-sm items-center gap-2">
                     {lastRecord && (
                         <>
-                            <br />
                             <Alert className={'bg-gradient-to-r from-violet-200 to-pink-200 border-none text-black'}>
                                 <AlertTitle className={'font-bold'}>Last BMI Record Found !</AlertTitle>
                                 <AlertDescription>
