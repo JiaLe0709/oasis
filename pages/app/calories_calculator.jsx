@@ -12,6 +12,7 @@ import { CaloriesList } from "@/lib/calories";
 import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Plus } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input";
 
 export default function CaloriesCalculator() {
@@ -227,62 +228,65 @@ export default function CaloriesCalculator() {
                                 }}
                             />
                             <br />
-                            {Object.entries(CaloriesList.type)
-                                .map(([category, items]) => {
-                                    const filteredItems = items.filter(item =>
-                                        item.name.toLowerCase().includes(searchItem.toLowerCase())
-                                    );
+                            <ScrollArea className="h-[500px] rounded-md p-4">
+                                {Object.entries(CaloriesList.type)
+                                    .map(([category, items]) => {
+                                        const filteredItems = items.filter(item =>
+                                            item.name.toLowerCase().includes(searchItem.toLowerCase())
+                                        );
 
-                                    if (filteredItems.length === 0) return null;
+                                        if (filteredItems.length === 0) return null;
 
-                                    return (
-                                        <div key={category} className="mb-4">
-                                            <h2 className="text-2xl font-bold capitalize mb-2">{category}</h2>
-                                            <br />
-                                            <div className="space-y-2">
-                                                {filteredItems.map((item, key) => (
-                                                    <div key={key} className={`flex items-center space-y-2 justify-between`}>
-                                                        <div className="flex items-center space-x-2">
-                                                            <Image
-                                                                alt={item.name}
-                                                                className="h-15 w-15 rounded-md"
-                                                                height="60"
-                                                                src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/Fruits/${item.image}`}
-                                                                style={{
-                                                                    aspectRatio: "60/60",
-                                                                    objectFit: "cover",
-                                                                }}
-                                                                width="60"
-                                                            />
-                                                            <div>
-                                                                <div className="text-lg font-bold">{item.name}</div>
-                                                                <div className="text-sm">{item.calories} kcal / 100g</div>
+                                        return (
+                                            <div key={category} className="mb-4">
+                                                <h2 className="text-2xl font-bold capitalize mb-2">{category}</h2>
+                                                <br />
+                                                <div className="space-y-2">
+                                                    {filteredItems.map((item, key) => (
+                                                        <div key={key} className={`flex items-center space-y-2 justify-between`}>
+                                                            <div className="flex items-center space-x-2">
+                                                                <Image
+                                                                    alt={item.name}
+                                                                    className="h-15 w-15 rounded-md"
+                                                                    height="60"
+                                                                    src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/Fruits/${item.image}`}
+                                                                    style={{
+                                                                        aspectRatio: "60/60",
+                                                                        objectFit: "cover",
+                                                                    }}
+                                                                    width="60"
+                                                                />
+                                                                <div>
+                                                                    <div className="text-lg font-bold">{item.name}</div>
+                                                                    <div className="text-sm">{item.calories} kcal / 100g</div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <Button
+                                                                    className={'dark:bg-[#1C1C1C] bg-[#F9FBF8] backdrop-blur-[10px] p-2 rounded-lg'}
+                                                                    onClick={
+                                                                        () => {
+                                                                            let types = ''
+                                                                            if (category == '🍋‍🟩 Fruits') {
+                                                                                types = 'Fruits'
+                                                                            } else if (category == '🥬 Vegetables') {
+                                                                                types = 'Vegetables'
+                                                                            }
+                                                                            handleAddCaloriesRecord(item.name, item.calories, item.image, types)
+                                                                        }
+                                                                    }
+                                                                >
+                                                                    <Plus className=" h-4 w-4" />
+                                                                </Button>
                                                             </div>
                                                         </div>
-                                                        <div className="flex items-center space-x-2">
-                                                            <Button
-                                                                onClick={
-                                                                    () => {
-                                                                        let types = ''
-                                                                        if (category == '🍋‍🟩 Fruits') {
-                                                                            types = 'Fruits'
-                                                                        } else if (category == '🥬 Vegetables') {
-                                                                            types = 'Vegetables'
-                                                                        }
-                                                                        handleAddCaloriesRecord(item.name, item.calories, item.image, types)
-                                                                    }
-                                                                }
-                                                            >
-                                                                <Plus className="mr-2 h-4 w-4" />
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                                    ))}
+                                                </div>
                                             </div>
-                                        </div>
-                                    );
-                                })
-                            }
+                                        );
+                                    })
+                                }
+                            </ScrollArea>
                         </TabsContent>
                         <TabsContent value="record">
                             <br />
