@@ -237,6 +237,15 @@ export default function CaloriesCalculator() {
 
                                         if (filteredItems.length === 0) return null;
 
+                                        let types = ''
+                                        if (category == '🍋‍🟩 Fruits') {
+                                            types = 'Fruits'
+                                        } else if (category == '🥬 Vegetables') {
+                                            types = 'Vegetables'
+                                        } else if (category == '🥩 Meat & Protein') {
+                                            types = 'Meat'
+                                        }
+
                                         return (
                                             <div key={category} className="mb-4">
                                                 <h2 className="text-2xl font-bold capitalize mb-2">{category}</h2>
@@ -249,7 +258,7 @@ export default function CaloriesCalculator() {
                                                                     alt={item.name}
                                                                     className="h-15 w-15 rounded-md"
                                                                     height="60"
-                                                                    src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/Fruits/${item.image}`}
+                                                                    src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${types}/${item.image}`}
                                                                     style={{
                                                                         aspectRatio: "60/60",
                                                                         objectFit: "cover",
@@ -266,12 +275,6 @@ export default function CaloriesCalculator() {
                                                                     className={'dark:bg-[#1C1C1C] bg-[#F9FBF8] backdrop-blur-[10px] p-2 rounded-lg'}
                                                                     onClick={
                                                                         () => {
-                                                                            let types = ''
-                                                                            if (category == '🍋‍🟩 Fruits') {
-                                                                                types = 'Fruits'
-                                                                            } else if (category == '🥬 Vegetables') {
-                                                                                types = 'Vegetables'
-                                                                            }
                                                                             handleAddCaloriesRecord(item.name, item.calories, item.image, types)
                                                                         }
                                                                     }
@@ -292,46 +295,48 @@ export default function CaloriesCalculator() {
                             <br />
                             <p className="text-xl font-bold">Your calories intake history for today</p>
                             <br />
-                            <div className="space-y-4">
-                                {(calorieIntakeInRecord?.length > 0) ? (
-                                    calorieIntakeInRecord
-                                        .map((record, index) => (
-                                            <div
-                                                key={index}
-                                                className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
-                                            >
-                                                <div className="flex justify-between text-sm">
-                                                    <span className="font-bold">
-                                                        <Image
-                                                            alt={record?.foodName}
-                                                            className="h-12 w-12 rounded-md inline-block mr-2"
-                                                            height="60"
-                                                            src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${record?.types}/${record?.img}`}
-                                                            style={{
-                                                                aspectRatio: "60/60",
-                                                                objectFit: "cover",
-                                                            }}
-                                                            width="60"
-                                                        />
-                                                        {record?.foodName} ({record?.amountIntake} kcal / 100g)
-                                                    </span>
-                                                    <span className="text-center justify-center flex inline-block">{record?.timestamp}</span>
+                            <ScrollArea className="h-[450px] rounded-md p-4">
+                                <div className="space-y-4">
+                                    {(calorieIntakeInRecord?.length > 0) ? (
+                                        calorieIntakeInRecord
+                                            .map((record, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
+                                                >
+                                                    <div className="flex justify-between text-sm">
+                                                        <span className="font-bold">
+                                                            <Image
+                                                                alt={record?.foodName}
+                                                                className="h-12 w-12 rounded-md inline-block mr-2"
+                                                                height="60"
+                                                                src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${record?.types}/${record?.img}`}
+                                                                style={{
+                                                                    aspectRatio: "60/60",
+                                                                    objectFit: "cover",
+                                                                }}
+                                                                width="60"
+                                                            />
+                                                            {record?.foodName} ({record?.amountIntake} kcal / 100g)
+                                                        </span>
+                                                        <span className="text-center justify-center flex inline-block">{record?.timestamp}</span>
+                                                    </div>
                                                 </div>
+                                            ))
+                                    ) : (
+                                        <>
+                                            <br />
+                                            <div className="flex items-center justify-center">
+                                                <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
                                             </div>
-                                        ))
-                                ) : (
-                                    <>
-                                        <br />
-                                        <div className="flex items-center justify-center">
-                                            <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
-                                        </div>
-                                        <p className="text-base text-center">
-                                            No Record Found !
-                                        </p>
-                                        <br />
-                                    </>
-                                )}
-                            </div>
+                                            <p className="text-base text-center">
+                                                No Record Found !
+                                            </p>
+                                            <br />
+                                        </>
+                                    )}
+                                </div>
+                            </ScrollArea>
                         </TabsContent>
                     </Tabs>
                     <br />

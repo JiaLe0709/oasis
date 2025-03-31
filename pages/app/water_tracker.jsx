@@ -13,6 +13,7 @@ import { HiQuestionMarkCircle } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 // import { LocalNotifications } from "@capacitor/local-notifications";
 // import { Switch } from "@/components/ui/switch"
 
@@ -345,34 +346,37 @@ export default function WaterTracker() {
                             <br />
                             <p className="text-xl font-bold">Your water intake history for today</p>
                             <br />
-                            <div className="space-y-4">
-                                {(waterIntakeRecord?.length > 0) ? (
-                                    waterIntakeRecord.map((record, index) => (
-                                        <div
-                                            key={index}
-                                            className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
-                                        >
-                                            <div className="flex justify-between text-sm">
-                                                <span>
-                                                    <Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={30} height={30} alt="cup" />
-                                                    {record?.amount} ml
-                                                </span>
-                                                <span>{record?.timestamp}</span>
+                            <ScrollArea className="h-[360px] rounded-md p-4">
+                                <div className="space-y-4">
+                                    {(waterIntakeRecord?.length > 0) ? (
+                                        waterIntakeRecord.map((record, index) => (
+                                            <div
+                                                key={index}
+                                                className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
+                                            >
+                                                <div className="flex justify-between text-sm">
+                                                    <span>
+                                                        <Image src={'./../Cup_with_Straw.png'} className="inline-block mr-2" width={30} height={30} alt="cup" />
+                                                        {record?.amount} ml
+                                                    </span>
+                                                    <span>{record?.timestamp}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <>
-                                        <br />
-                                        <div className="flex items-center justify-center">
-                                            <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
-                                        </div>
-                                        <p className="text-base text-center">
-                                            No Drink Record Found !
-                                        </p>
-                                        <br />
-                                    </>
-                                )}</div>
+                                        ))
+                                    ) : (
+                                        <>
+                                            <br />
+                                            <div className="flex items-center justify-center">
+                                                <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
+                                            </div>
+                                            <p className="text-base text-center">
+                                                No Drink Record Found !
+                                            </p>
+                                            <br />
+                                        </>
+                                    )}
+                                </div>
+                            </ScrollArea>
                         </TabsContent>
                         {/* <TabsContent value="reminder">
                             <p className="text-xl font-bold">Reminder</p>
