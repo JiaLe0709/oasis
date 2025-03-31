@@ -244,6 +244,8 @@ export default function CaloriesCalculator() {
                                             types = 'Vegetables'
                                         } else if (category == '🥩 Meat & Protein') {
                                             types = 'Meat'
+                                        } else if (category == '🍚 Grains & Cereals') {
+                                            types = 'Grains'
                                         }
 
                                         return (
