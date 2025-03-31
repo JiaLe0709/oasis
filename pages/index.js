@@ -58,6 +58,9 @@ export default function Home() {
       if (caloriesIntake == null && caloriesRecord == null) {
         oasisStorage.set("totalCaloriesIntake", 0)
         oasisStorage.set("caloriesIntakeRecord", [])
+        oasisStorage.set("caloriesIntakeInMorning", 0)
+        oasisStorage.set("caloriesIntakeInAfternoon", 0)
+        oasisStorage.set("caloriesIntakeInNight", 0)
       }
 
       if (storedUsername) {

@@ -11,8 +11,8 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 import { CaloriesList } from "@/lib/calories";
 import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function CaloriesCalculator() {
 
@@ -23,18 +23,28 @@ export default function CaloriesCalculator() {
     const [calorieIntakeInAfternoon, setCalorieIntakeInAfternoon] = useState(0)
     const [calorieIntakeInNight, setCalorieIntakeInNight] = useState(0)
     const [calorieIntakeInTotal, setCalorieIntakeInTotal] = useState(0)
+    const [calorieIntakeInRecord, setCalorieIntakeInRecord] = useState([])
 
-    // UI
-    const [isVisible, setIsVisible] = useState(true)
+    const [searchItem, setSearchItem] = useState('')
 
     useEffect(() => {
         async function fetchData() {
 
             // Obtain Data
             const gender = await oasisStorage.get("gender")
+            const totalCaloriesIntake = await oasisStorage.get("totalCaloriesIntake")
+            const caloriesIntakeRecord = await oasisStorage.get("caloriesIntakeRecord")
+            const mon = await oasisStorage.get("caloriesIntakeInMorning")
+            const aft = await oasisStorage.get("caloriesIntakeInAfternoon")
+            const nit = await oasisStorage.get("caloriesIntakeInNight")
 
             // Constant Data is set [no matters is latest or not]
             setGender(gender)
+            setCalorieIntakeInTotal(totalCaloriesIntake)
+            setCalorieIntakeInRecord(caloriesIntakeRecord)
+            setCalorieIntakeInMorning(mon || 0)
+            setCalorieIntakeInAfternoon(aft || 0)
+            setCalorieIntakeInNight(nit || 0)
 
         }
 
@@ -62,8 +72,53 @@ export default function CaloriesCalculator() {
     const year = date.getFullYear()
     const currentDate = `${day}/${month}/${year}`
 
-    const handleAddCaloriesRecord = (name, calories) => {
+    const handleAddCaloriesRecord = async (name, calories, imageUrl, cats) => {
+
+        // Init Date
+        const currentDate = new Date();
+        console.log(cats)
+
+        // Generate Timestamp
+        const hours = currentDate.getHours();
+        const minutes = currentDate.getMinutes();
+        const seconds = currentDate.getSeconds();
+
+        const dayCondition = (hours >= 6 && hours < 12) ? 'Morning' : (hours >= 12 && hours < 18) ? 'Afternoon' : 'Night'
+
+        // get Array & set Array
+        const caloriesIntakeRecord = (await oasisStorage.get("caloriesIntakeRecord")) || [];
+
+        const newCaloriesRecord =
+        {
+            'timestamp': `${hours}:${minutes}:${seconds}`,
+            'foodName': name,
+            'amountIntake': calories,
+            'day': dayCondition,
+            'img': imageUrl,
+            'types': cats
+        }
+
+        // Update Data
+        oasisStorage.set("caloriesIntakeRecord", [...caloriesIntakeRecord, newCaloriesRecord])
+        oasisStorage.set("caloriesIntakeDate", `${day}-${month}-${year}`)
+        oasisStorage.set("totalCaloriesIntake", Number(calories + calorieIntakeInTotal))
+
+        if (hours >= 6 && hours < 12) {
+            setCalorieIntakeInMorning(calories + calorieIntakeInMorning)
+            oasisStorage.set("caloriesIntakeInMorning", calories + calorieIntakeInMorning)
+        } else if (hours >= 12 && hours < 18) {
+            setCalorieIntakeInAfternoon(calories + calorieIntakeInAfternoon)
+            oasisStorage.set("caloriesIntakeInAfternoon", calories + calorieIntakeInAfternoon)
+        } else {
+            setCalorieIntakeInNight(calories + calorieIntakeInNight)
+            oasisStorage.set("caloriesIntakeInNight", calories + calorieIntakeInNight)
+        }
+
+        // Update State
         setCalorieIntakeInTotal(calories + calorieIntakeInTotal)
+        setCalorieIntakeInRecord([...caloriesIntakeRecord, newCaloriesRecord])
+
+        toast.success('Reacord Added Successfully !')
     }
 
     return (
@@ -147,48 +202,132 @@ export default function CaloriesCalculator() {
                             <div className="grid backdrop-blur-xs grid-cols-3 gap-2 text-center text-sm bg-cover bg-no-repeat bg-center  bg-[url('/DAN.png')] bg-[length:100%_100%] rounded-md p-1">
                                 <div className="rounded-md bg-muted p-2">
                                     <div className="font-bold text-black">Morning</div>
-                                    <div  className="font-bold text-black">{calorieIntakeInMorning} kcal</div>
+                                    <div className="font-bold text-black">{calorieIntakeInMorning.toFixed(2)} kcal</div>
                                 </div>
                                 <div className="rounded-md bg-muted p-2">
                                     <div className="font-bold text-black">Afternoon</div>
-                                    <div className="font-bold text-black">{calorieIntakeInAfternoon} kcal</div>
+                                    <div className="font-bold text-black">{calorieIntakeInAfternoon.toFixed(2)} kcal</div>
                                 </div>
                                 <div className="rounded-md bg-muted p-2">
                                     <div className="font-bold">Night</div>
-                                    <div className="font-bold">{calorieIntakeInNight} kcal</div>
+                                    <div className="font-bold">{calorieIntakeInNight.toFixed(2)} kcal</div>
                                 </div>
                             </div>
                             <br />
-                            {CaloriesList.fruits.map((item, key) => (
-                                <div key={key} className={`flex items-center space-y-2 justify-between`}>
-                                    <div className="flex items-center space-x-2">
-                                        <Image
-                                            alt={item.name}
-                                            className="h-15 w-15 rounded-md"
-                                            height="60"
-                                            src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/Fruits/${item.image}`}
-                                            style={{
-                                                aspectRatio: "60/60",
-                                                objectFit: "cover",
-                                            }}
-                                            width="60"
-                                        />
-                                        <div>
-                                            <div className="text-lg font-bold">{item.name}</div>
-                                            <div className="text-sm">{item.calories} kcal</div>
+                            <Input
+                                value={searchItem}
+                                className={'dark:border-lime-300 border-lime-500'}
+                                placeholder="Item you want to find"
+                                required
+                                id="water"
+                                variant="secondary"
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    setSearchItem(value);
+                                }}
+                            />
+                            <br />
+                            {Object.entries(CaloriesList.type)
+                                .map(([category, items]) => {
+                                    const filteredItems = items.filter(item =>
+                                        item.name.toLowerCase().includes(searchItem.toLowerCase())
+                                    );
+
+                                    if (filteredItems.length === 0) return null;
+
+                                    return (
+                                        <div key={category} className="mb-4">
+                                            <h2 className="text-2xl font-bold capitalize mb-2">{category}</h2>
+                                            <br />
+                                            <div className="space-y-2">
+                                                {filteredItems.map((item, key) => (
+                                                    <div key={key} className={`flex items-center space-y-2 justify-between`}>
+                                                        <div className="flex items-center space-x-2">
+                                                            <Image
+                                                                alt={item.name}
+                                                                className="h-15 w-15 rounded-md"
+                                                                height="60"
+                                                                src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/Fruits/${item.image}`}
+                                                                style={{
+                                                                    aspectRatio: "60/60",
+                                                                    objectFit: "cover",
+                                                                }}
+                                                                width="60"
+                                                            />
+                                                            <div>
+                                                                <div className="text-lg font-bold">{item.name}</div>
+                                                                <div className="text-sm">{item.calories} kcal / 100g</div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <Button
+                                                                onClick={
+                                                                    () => {
+                                                                        let types = ''
+                                                                        if (category == '🍋‍🟩 Fruits') {
+                                                                            types = 'Fruits'
+                                                                        } else if (category == '🥬 Vegetables') {
+                                                                            types = 'Vegetables'
+                                                                        }
+                                                                        handleAddCaloriesRecord(item.name, item.calories, item.image, types)
+                                                                    }
+                                                                }
+                                                            >
+                                                                <Plus className="mr-2 h-4 w-4" />
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex items-center space-x-2">
-                                        <Button
-                                            onClick={() => handleAddCaloriesRecord(item.name, item.calories)}
-                                        >
-                                            <Plus className="mr-2 h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                </div>
-                            ))}
+                                    );
+                                })
+                            }
                         </TabsContent>
                         <TabsContent value="record">
+                            <br />
+                            <p className="text-xl font-bold">Your calories intake history for today</p>
+                            <br />
+                            <div className="space-y-4">
+                                {(calorieIntakeInRecord?.length > 0) ? (
+                                    calorieIntakeInRecord
+                                        .map((record, index) => (
+                                            <div
+                                                key={index}
+                                                className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
+                                            >
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="font-bold">
+                                                        <Image
+                                                            alt={record?.foodName}
+                                                            className="h-12 w-12 rounded-md inline-block mr-2"
+                                                            height="60"
+                                                            src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${record?.types}/${record?.img}`}
+                                                            style={{
+                                                                aspectRatio: "60/60",
+                                                                objectFit: "cover",
+                                                            }}
+                                                            width="60"
+                                                        />
+                                                        {record?.foodName} ({record?.amountIntake} kcal / 100g)
+                                                    </span>
+                                                    <span className="text-center justify-center flex inline-block">{record?.timestamp}</span>
+                                                </div>
+                                            </div>
+                                        ))
+                                ) : (
+                                    <>
+                                        <br />
+                                        <div className="flex items-center justify-center">
+                                            <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
+                                        </div>
+                                        <p className="text-base text-center">
+                                            No Record Found !
+                                        </p>
+                                        <br />
+                                    </>
+                                )}
+                            </div>
                         </TabsContent>
                     </Tabs>
                     <br />

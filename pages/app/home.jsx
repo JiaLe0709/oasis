@@ -111,7 +111,8 @@ export default function Home() {
         // Handle Update based on Date
 
         if (storedDate.getTime() === currentDate.getTime()) {
-          setCaloriesIntake(totalCaloriesIntake || null)
+          if (totalCaloriesIntake) { setCaloriesIntake(totalCaloriesIntake.toFixed(2) || null) }
+
         } else {
           // Init Date format (latest)
           const currentDayOfMonth = currentDate.getDate();
@@ -123,6 +124,9 @@ export default function Home() {
           await oasisStorage.set("caloriesIntakeDate", date)
           await oasisStorage.set("totalCaloriesIntake", 0)
           await oasisStorage.set("caloriesIntakeRecord", [])
+          await oasisStorage.set("caloriesIntakeInMorning", 0)
+          await oasisStorage.set("caloriesIntakeInAfternoon", 0)
+          await oasisStorage.set("caloriesIntakeInNight", 0)
 
           // Update State (latest)
           setCaloriesIntake(0)

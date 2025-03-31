@@ -155,6 +155,7 @@ export default function WaterTracker() {
         setSelectedAmount(0)
         setTotalWaterIntake(newTotalWaterIntake)
         setWaterIntakeRecord([...waterIntakeRecord, newWaterRecord])
+        toast.success("Water intake recorded successfully!")
     }
 
     /* 
