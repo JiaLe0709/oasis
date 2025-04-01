@@ -4,7 +4,7 @@ import AppGridLayout from '@/components/Home/functionList';
 import Avatar from 'boring-avatars';
 import confetti from 'canvas-confetti';
 import { useRouter } from 'next/router';
-import { Scale, Flame, Droplet, ChevronRight } from "lucide-react"
+import { Scale, ChevronRight } from "lucide-react"
 import Image from 'next/image';
 
 export default function Home() {
@@ -209,7 +209,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="mt-2">
-                  <div className="text-2xl font-semibold">{ bmi && ((bmi.toString()).length > 7) ? (`${(bmi.toString()).slice(0, 7) + "..."}`) : (bmi) || '-'}</div>
+                  <div className="text-2xl font-semibold">{bmi && ((bmi.toString()).length > 7) ? (`${(bmi.toString()).slice(0, 7) + "..."}`) : (bmi) || '-'}</div>
                   <div className="text-sm  text-stone-800 dark:text-gray-400">{bmi ? bodyStatus : "Measure now !"}</div>
                 </div>
               </div>
@@ -324,6 +324,9 @@ export default function Home() {
             </div>
           </div>*/}
           <AppGridLayout />
+          <footer className="flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
+            <Image alt='jiale' height={50} width={120} className='invert dark:invert-0'  src='./../jiale.png'  />
+          </footer>
         </div>
       </div>
 
