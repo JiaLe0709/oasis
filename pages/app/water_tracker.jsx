@@ -220,7 +220,7 @@ export default function WaterTracker() {
         <>
             <Toaster richColors position="top-center" />
             <div
-                className={`grid grid-rows-[20px_1fr_20px]   2xl:justify-items-center  xl:justify-items-center sm:justify-items-center   md:justify-items-center lg:justify-items-center min-h-screen p-8 pb-20 gap-10 sm:p-20 `}
+                className={`grid grid-rows-[20px_1fr_20px]   2xl:justify-items-center  xl:justify-items-center sm:justify-items-center   md:justify-items-center lg:justify-items-center min-h-screen p-8 gap-10 `}
             >
                 <h1 className="text-2xl font-bold flex items-center">
                     <div className="mr-8">
@@ -424,7 +424,7 @@ export default function WaterTracker() {
                         </TabsContent> */}
                     </Tabs>
                     <br />
-                    <footer className="flex items-center justify-center  p-4 text-xs text-gray-500 dark:text-gray-400">
+                    <footer className="flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
                         <InfoIcon className="mr-2 h-4 w-4" />
                         <span>The water intake suggestion is just a reference.</span>
                     </footer>

@@ -11,9 +11,10 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 import { CaloriesList } from "@/lib/calories";
 import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Plus } from "lucide-react";
+import { Plus, WifiOff } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function CaloriesCalculator() {
 
@@ -27,6 +28,20 @@ export default function CaloriesCalculator() {
     const [calorieIntakeInRecord, setCalorieIntakeInRecord] = useState([])
 
     const [searchItem, setSearchItem] = useState('')
+
+    const [isOnline, setIsOnline] = useState(null)
+
+    const CheckInternetConnection = () => {
+        if (navigator.onLine) {
+            setIsOnline(true)
+        } else {
+            setIsOnline(false)
+        }
+    }
+
+    useEffect(() => {
+        CheckInternetConnection()
+    }, [])
 
     useEffect(() => {
         async function fetchData() {
@@ -126,7 +141,7 @@ export default function CaloriesCalculator() {
         <>
             <Toaster richColors position="top-center" />
             <div
-                className={`grid grid-rows-[20px_1fr_20px]   2xl:justify-items-center  xl:justify-items-center sm:justify-items-center   md:justify-items-center lg:justify-items-center min-h-screen p-8 pb-20 gap-10 sm:p-20 `}
+                className={`grid grid-rows-[20px_1fr_20px]   2xl:justify-items-center  xl:justify-items-center sm:justify-items-center   md:justify-items-center lg:justify-items-center min-h-screen p-8  gap-10  `}
             >
                 <h1 className="text-2xl font-bold flex items-center">
                     <div className="mr-8">
@@ -210,11 +225,37 @@ export default function CaloriesCalculator() {
                                     <div className="font-bold text-black">{calorieIntakeInAfternoon.toFixed(2)} kcal</div>
                                 </div>
                                 <div className="rounded-md bg-muted p-2">
-                                    <div className="font-bold">Night</div>
-                                    <div className="font-bold">{calorieIntakeInNight.toFixed(2)} kcal</div>
+                                    <div className="font-bold text-white">Night</div>
+                                    <div className="font-bold text-white">{calorieIntakeInNight.toFixed(2)} kcal</div>
                                 </div>
                             </div>
-                            <br />
+                            <hr className="border-t my-4 border-gray-600 border-dashed overflow-visible relative" />
+                            {isOnline == false && (
+                                <>
+                                    <Alert className={'bg-red-400 border-red-400 text-white'}>
+                                        <WifiOff className="h-4 w-4 text-red-500" />
+                                        <AlertTitle>No Internet!</AlertTitle>
+                                        <AlertDescription>
+                                            You may check your Internet...
+                                            <button
+                                                className="text-red-900 font-bold"
+                                                onClick={() => {
+                                                    if (navigator.onLine) {
+                                                        setIsOnline(true)
+                                                        toast.success('Connection Recover !')
+                                                    } else {
+                                                        setIsOnline(false)
+                                                        toast.error("No Internet connection !")
+                                                    }
+                                                }}
+                                            >
+                                                Click here to try again.
+                                            </button>
+                                        </AlertDescription>
+                                    </Alert>
+                                    <br />
+                                </>
+                            )}
                             <Input
                                 value={searchItem}
                                 className={'dark:border-lime-300 border-lime-500'}
@@ -228,121 +269,236 @@ export default function CaloriesCalculator() {
                                 }}
                             />
                             <br />
-                            <ScrollArea className="h-[500px] rounded-md p-4">
-                                {Object.entries(CaloriesList.type)
-                                    .map(([category, items]) => {
-                                        const filteredItems = items.filter(item =>
-                                            item.name.toLowerCase().includes(searchItem.toLowerCase())
-                                        );
+                            {isOnline == true ? (
+                                <ScrollArea className="h-[500px] rounded-md p-2">
+                                    {Object.entries(CaloriesList.type)
+                                        .map(([category, items]) => {
+                                            const filteredItems = items.filter(item =>
+                                                item.name.toLowerCase().includes(searchItem.toLowerCase())
+                                            );
 
-                                        if (filteredItems.length === 0) return null;
+                                            if (filteredItems.length === 0) return null;
 
-                                        let types = ''
-                                        if (category == '🍋‍🟩 Fruits') {
-                                            types = 'Fruits'
-                                        } else if (category == '🥬 Vegetables') {
-                                            types = 'Vegetables'
-                                        } else if (category == '🥩 Meat & Protein') {
-                                            types = 'Meat'
-                                        } else if (category == '🍚 Grains & Cereals') {
-                                            types = 'Grains'
-                                        }
+                                            let types = ''
+                                            if (category == '🍋‍🟩 Fruits') {
+                                                types = 'Fruits'
+                                            } else if (category == '🥬 Vegetables') {
+                                                types = 'Vegetables'
+                                            } else if (category == '🥩 Meat & Protein') {
+                                                types = 'Meat'
+                                            } else if (category == '🍚 Grains & Cereals') {
+                                                types = 'Grains'
+                                            }
 
-                                        return (
-                                            <div key={category} className="mb-4">
-                                                <h2 className="text-2xl font-bold capitalize mb-2">{category}</h2>
-                                                <br />
-                                                <div className="space-y-2">
-                                                    {filteredItems.map((item, key) => (
-                                                        <div key={key} className={`flex items-center space-y-2 justify-between`}>
-                                                            <div className="flex items-center space-x-2">
-                                                                <Image
-                                                                    alt={item.name}
-                                                                    className="h-15 w-15 rounded-md"
-                                                                    height="60"
-                                                                    src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${types}/${item.image}`}
-                                                                    style={{
-                                                                        aspectRatio: "60/60",
-                                                                        objectFit: "cover",
-                                                                    }}
-                                                                    width="60"
-                                                                />
-                                                                <div>
-                                                                    <div className="text-lg font-bold">{item.name}</div>
-                                                                    <div className="text-sm">{item.calories} kcal / 100g</div>
+                                            return (
+                                                <div key={category} className="mb-4">
+                                                    <h2 className="text-2xl font-bold capitalize mb-2">{category}</h2>
+                                                    <br />
+                                                    <div className="space-y-2">
+                                                        {filteredItems.map((item, key) => (
+                                                            <div key={key} className={`flex items-center space-y-2 justify-between`}>
+                                                                <div className="flex items-center space-x-2">
+                                                                    <Image
+                                                                        alt={item.name}
+                                                                        className="h-15 w-15 rounded-md"
+                                                                        height="60"
+                                                                        src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${types}/${item.image}`}
+                                                                        style={{
+                                                                            aspectRatio: "60/60",
+                                                                            objectFit: "cover",
+                                                                        }}
+                                                                        width="60"
+                                                                    />
+                                                                    <div>
+                                                                        <div className="text-lg font-bold">{item.name}</div>
+                                                                        <div className="text-sm">{item.calories} kcal / 100g</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex items-center space-x-2">
+                                                                    <Button
+                                                                        className={'dark:bg-[#1C1C1C] bg-[#F9FBF8] backdrop-blur-[10px] p-2 rounded-lg'}
+                                                                        onClick={
+                                                                            () => {
+                                                                                handleAddCaloriesRecord(item.name, item.calories, item.image, types)
+                                                                            }
+                                                                        }
+                                                                    >
+                                                                        <Plus className=" h-4 w-4" />
+                                                                    </Button>
                                                                 </div>
                                                             </div>
-                                                            <div className="flex items-center space-x-2">
-                                                                <Button
-                                                                    className={'dark:bg-[#1C1C1C] bg-[#F9FBF8] backdrop-blur-[10px] p-2 rounded-lg'}
-                                                                    onClick={
-                                                                        () => {
-                                                                            handleAddCaloriesRecord(item.name, item.calories, item.image, types)
-                                                                        }
-                                                                    }
-                                                                >
-                                                                    <Plus className=" h-4 w-4" />
-                                                                </Button>
-                                                            </div>
-                                                        </div>
-                                                    ))}
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })
-                                }
-                            </ScrollArea>
+                                            );
+                                        })
+                                    }
+                                </ScrollArea>
+                            ) : (
+                                <ScrollArea className="h-[500px] rounded-md p-4">
+                                    {Object.entries(CaloriesList.type)
+                                        .map(([category, items]) => {
+                                            const filteredItems = items.filter(item =>
+                                                item.name.toLowerCase().includes(searchItem.toLowerCase())
+                                            );
+
+                                            if (filteredItems.length === 0) return null;
+
+                                            let types = ''
+                                            if (category == '🍋‍🟩 Fruits') {
+                                                types = 'Fruits'
+                                            } else if (category == '🥬 Vegetables') {
+                                                types = 'Vegetables'
+                                            } else if (category == '🥩 Meat & Protein') {
+                                                types = 'Meat'
+                                            } else if (category == '🍚 Grains & Cereals') {
+                                                types = 'Grains'
+                                            }
+
+                                            return (
+                                                <div key={category} className="mb-4">
+                                                    <h2 className="text-2xl font-bold capitalize mb-2">{category}</h2>
+                                                    <br />
+                                                    <div className="space-y-2">
+                                                        {filteredItems.map((item, key) => (
+                                                            <div key={key} className={`flex items-center space-y-2 justify-between`}>
+                                                                <div className="flex items-center space-x-2">
+                                                                    <Image
+                                                                        alt={item.name}
+                                                                        className="h-15 w-15 rounded-md"
+                                                                        height="60"
+                                                                        src={`./../NF.png`}
+                                                                        style={{
+                                                                            aspectRatio: "60/60",
+                                                                            objectFit: "cover",
+                                                                        }}
+                                                                        width="60"
+                                                                    />
+                                                                    <div>
+                                                                        <div className="text-lg font-bold">{item.name}</div>
+                                                                        <div className="text-sm">{item.calories} kcal / 100g</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex items-center space-x-2">
+                                                                    <Button
+                                                                        className={'dark:bg-[#1C1C1C] bg-[#F9FBF8] backdrop-blur-[10px] p-2 rounded-lg'}
+                                                                        onClick={
+                                                                            () => {
+                                                                                handleAddCaloriesRecord(item.name, item.calories, item.image, types)
+                                                                            }
+                                                                        }
+                                                                    >
+                                                                        <Plus className=" h-4 w-4" />
+                                                                    </Button>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
+                                    }
+                                </ScrollArea>
+                            )}
                         </TabsContent>
                         <TabsContent value="record">
                             <br />
                             <p className="text-xl font-bold">Your calories intake history for today</p>
                             <br />
-                            <ScrollArea className="h-[450px] rounded-md p-4">
-                                <div className="space-y-4">
-                                    {(calorieIntakeInRecord?.length > 0) ? (
-                                        calorieIntakeInRecord
-                                            .map((record, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
-                                                >
-                                                    <div className="flex justify-between text-sm">
-                                                        <span className="font-bold">
+                            {isOnline == true ? (
+                                <ScrollArea className="h-[450px] rounded-md p-4">
+                                    <div className="space-y-4">
+
+                                        {(calorieIntakeInRecord?.length > 0) ? (
+                                            calorieIntakeInRecord
+                                                .map((record, index) => (
+                                                    <div key={index} className={`flex items-center space-y-2 justify-between`}>
+                                                        <div className="flex items-center space-x-2">
                                                             <Image
                                                                 alt={record?.foodName}
-                                                                className="h-12 w-12 rounded-md inline-block mr-2"
+                                                                className="h-15 w-15 rounded-md"
                                                                 height="60"
-                                                                src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${record?.types}/${record?.img}`}
+                                                                src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${record.types}/${record.img}`}
                                                                 style={{
                                                                     aspectRatio: "60/60",
                                                                     objectFit: "cover",
                                                                 }}
                                                                 width="60"
                                                             />
-                                                            {record?.foodName} ({record?.amountIntake} kcal / 100g)
-                                                        </span>
-                                                        <span className="text-center justify-center flex inline-block">{record?.timestamp}</span>
+                                                            <div>
+                                                                <div className="text-lg font-bold">{record?.foodName}</div>
+                                                                <div className="text-sm">{record?.amountIntake} kcal / 100g</div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                            {record?.timestamp}
+                                                        </div>
                                                     </div>
+                                                ))
+                                        ) : (
+                                            <>
+                                                <br />
+                                                <div className="flex items-center justify-center">
+                                                    <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
                                                 </div>
-                                            ))
-                                    ) : (
-                                        <>
-                                            <br />
-                                            <div className="flex items-center justify-center">
-                                                <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
-                                            </div>
-                                            <p className="text-base text-center">
-                                                No Record Found !
-                                            </p>
-                                            <br />
-                                        </>
-                                    )}
-                                </div>
-                            </ScrollArea>
+                                                <p className="text-base text-center">
+                                                    No Record Found !
+                                                </p>
+                                                <br />
+                                            </>
+                                        )}
+                                    </div>
+                                </ScrollArea>
+
+                            ) : (
+                                <ScrollArea className="h-[450px] rounded-md p-4">
+                                    <div className="space-y-4">
+
+                                        {(calorieIntakeInRecord?.length > 0) ? (
+                                            calorieIntakeInRecord
+                                                .map((record, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#101112] dark:hover:bg-[#1F2123] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
+                                                    >
+                                                        <div className="flex justify-between text-sm">
+                                                            <span className="font-bold">
+                                                                <Image
+                                                                    alt={record?.foodName}
+                                                                    className="h-12 w-12 rounded-md inline-block mr-2"
+                                                                    height="60"
+                                                                    src={`./../NF.PNG`}
+                                                                    style={{
+                                                                        aspectRatio: "60/60",
+                                                                        objectFit: "cover",
+                                                                    }}
+                                                                    width="60"
+                                                                />
+                                                                {record?.foodName} ({record?.amountIntake} kcal / 100g)
+                                                            </span>
+                                                            <span className="text-center justify-center flex inline-block">{record?.timestamp}</span>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                        ) : (
+                                            <>
+                                                <br />
+                                                <div className="flex items-center justify-center">
+                                                    <Image src={'.././nothin.png'} width={80} height={80} alt="Nothin"></Image>
+                                                </div>
+                                                <p className="text-base text-center">
+                                                    No Record Found !
+                                                </p>
+                                                <br />
+                                            </>
+                                        )}
+                                    </div>
+                                </ScrollArea>
+                            )}
                         </TabsContent>
                     </Tabs>
                     <br />
-                    <footer className="flex items-center justify-center  p-4 text-xs text-gray-500 dark:text-gray-400">
+                    <footer className="flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
                         <InfoIcon className="mr-2 h-4 w-4" />
                         <span>The calories intake suggestion is just a reference.</span>
                     </footer>

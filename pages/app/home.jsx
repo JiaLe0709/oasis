@@ -209,7 +209,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="mt-2">
-                  <div className="text-2xl font-semibold">{bmi || '-'}</div>
+                  <div className="text-2xl font-semibold">{ bmi && ((bmi.toString()).length > 7) ? (`${(bmi.toString()).slice(0, 7) + "..."}`) : (bmi) || '-'}</div>
                   <div className="text-sm  text-stone-800 dark:text-gray-400">{bmi ? bodyStatus : "Measure now !"}</div>
                 </div>
               </div>
