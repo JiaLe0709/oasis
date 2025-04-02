@@ -324,9 +324,20 @@ export default function Home() {
             </div>
           </div>*/}
           <AppGridLayout />
+          <hr className="border-t my-4 border-gray-600 border-dashed overflow-visible relative" />
           <footer className="flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
-            <Image alt='jiale' height={50} width={120} className='invert dark:invert-0'  src='./../jiale.png'  />
+            <Image alt='Jia Le' height={80} width={150} className='invert dark:invert-0' src='./../jiale.png' />
           </footer>
+          <br/>
+          <div className="flex items-center justify-center gap-2 -mt-8 relative">
+            <div className="-mt-4 ">
+              <Image alt='Jia Mun' height={30} width={100} className='invert dark:invert-0' src='./../jiamun.png' />
+            </div>
+            <div className="-mt-4 ">
+              <Image alt='Ruiqi' height={30} width={100} className='invert dark:invert-0' src='./../ruiqi.png' />
+            </div>
+          </div>
+
         </div>
       </div>
 

@@ -15,6 +15,8 @@ import { Plus, WifiOff } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { PhotoProvider, PhotoView } from 'react-photo-view';
+import 'react-photo-view/dist/react-photo-view.css';
 
 export default function CaloriesCalculator() {
 
@@ -298,17 +300,22 @@ export default function CaloriesCalculator() {
                                                         {filteredItems.map((item, key) => (
                                                             <div key={key} className={`flex items-center space-y-2 justify-between`}>
                                                                 <div className="flex items-center space-x-2">
-                                                                    <Image
-                                                                        alt={item.name}
-                                                                        className="h-15 w-15 rounded-md"
-                                                                        height="60"
-                                                                        src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${types}/${item.image}`}
-                                                                        style={{
-                                                                            aspectRatio: "60/60",
-                                                                            objectFit: "cover",
-                                                                        }}
-                                                                        width="60"
-                                                                    />
+                                                                    <PhotoProvider>
+                                                                        <PhotoView src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${types}/${item.image}`}>
+                                                                            <Image
+                                                                                alt={item.name}
+                                                                                className="h-15 w-15 rounded-md"
+                                                                                height="60"
+                                                                                src={`https://cdn.jsdelivr.net/gh/timeless-projects/cdn@latest/Oasis/${types}/${item.image}`}
+                                                                                style={{
+                                                                                    aspectRatio: "60/60",
+                                                                                    objectFit: "cover",
+                                                                                }}
+                                                                                width="60"
+                                                                                onError={(e) => (e.currentTarget.src = "/NF.png")}
+                                                                            />
+                                                                        </PhotoView>
+                                                                    </PhotoProvider>
                                                                     <div>
                                                                         <div className="text-lg font-bold">{item.name}</div>
                                                                         <div className="text-sm">{item.calories} kcal / 100g</div>
