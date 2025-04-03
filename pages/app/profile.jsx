@@ -8,6 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label"
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from 'next/image';
+import { PhotoProvider, PhotoView } from 'react-photo-view';
+import 'react-photo-view/dist/react-photo-view.css';
 
 const Profile = () => {
 
@@ -111,7 +114,7 @@ const Profile = () => {
                     </div>
                     <br />
                 </div>
-                <h1 className='text-2xl font-bold text-center'>{username || null}</h1>
+                {<h1 className='text-2xl font-bold text-center'>{username || null}</h1>}
                 <hr className="border-t my-4 border-gray-600 border-dashed overflow-visible relative" />
                 <Tabs defaultValue="hd" className="">
                     <TabsList className={'bg-[#F4F4F5] dark:bg-[#27272A] w-full'}>
@@ -395,11 +398,26 @@ const Profile = () => {
                     </TabsContent>
                 </Tabs>
 
-
+                <hr className="border-t my-4 border-gray-600 border-dashed overflow-visible relative" />
+                <h2 className='text-xl font-bold'>💡 Info</h2>
+                <PhotoProvider>
+                    <PhotoView src="./../hp.png">
+                        <div className="flex justify-center items-center">
+                            <Image
+                                alt="HealthProfile"
+                                className="rounded-lg"
+                                height="85"
+                                src="./../hp.png"
+                                width="250"
+                            />
+                        </div>
+                    </PhotoView>
+                </PhotoProvider>
                 <br />
-                <p className='text-sm'>
-                    The patient has an existing health profile, allowing the rescue team to operate immediately with essential medical information.
+                <p className='text-sm font-bold'>
+                    If the patient has an existing health profile, it <span className="text-lime-500 font-bold dark:text-lime-300">allowing the rescue team to operate immediately</span> with essential medical information.
                 </p>
+
                 {/* bmi && (
                     <>
                         <hr className="border-t my-4 border-gray-600 border-dashed overflow-visible relative" />
