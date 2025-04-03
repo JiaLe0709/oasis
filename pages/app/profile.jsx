@@ -269,7 +269,7 @@ const Profile = () => {
                         <div className="flex items-center justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="dob" className="text-right">
-                                    Date of Birth (MM/DD/YYYY)
+                                    Date of Birth (M/D/Y)
                                 </Label>
                             </div>
                             <div className="flex items-center">
