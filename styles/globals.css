@@ -20,6 +20,10 @@ html.dark {
   --c-scrollbar-hover: #222;
 }
 
+::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 :root {
   --c-bg: #fff;
   --c-scrollbar: #eee;

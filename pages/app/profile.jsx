@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label"
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const Profile = () => {
 
@@ -18,6 +19,9 @@ const Profile = () => {
     const [weight, setWeight] = useState('')
     const [height, setHeight] = useState('')
     const [bloodType, setBloodType] = useState('')
+    const [dob, setDob] = useState('')
+    const [YearOfDOB, setYearofDOB] = useState('')
+    const [od, setOD] = useState('No')
 
     // BMI
     const [bmi, setBmi] = useState('')
@@ -31,6 +35,8 @@ const Profile = () => {
             const height = await oasisStorage.get('height')
             const gender = await oasisStorage.get('gender')
             const bloodType = await oasisStorage.get('bloodType')
+            const dob = await oasisStorage.get('dob')
+            const od = await oasisStorage.get('organDonor')
 
             const bmi = await oasisStorage.get('bmi')
 
@@ -39,6 +45,8 @@ const Profile = () => {
             setHeight(height)
             setWeight(weight)
             setBloodType(bloodType)
+            setDob(dob)
+            setOD(od)
 
             setBmi(bmi)
         }
@@ -71,6 +79,20 @@ const Profile = () => {
         setBmi((weight / (height * height)).toFixed(2))
     }, [weight, height])
 
+    useEffect(() => {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (regex.test(dob)) {
+            const DOB = new Date(dob)
+            const YearOfDOB = DOB.getFullYear()
+            setYearofDOB(YearOfDOB)
+        } else {
+            setYearofDOB('')
+        }
+    }, [dob])
+
+    const d = new Date();
+    const year = d.getFullYear();
+
     return (
         <>
             <div className="container max-w-md mx-auto px-4 py-4">
@@ -91,143 +113,293 @@ const Profile = () => {
                 </div>
                 <h1 className='text-2xl font-bold text-center'>{username || null}</h1>
                 <hr className="border-t my-4 border-gray-600 border-dashed overflow-visible relative" />
-                <h2 className='text-xl font-bold'>Profile Details</h2>
-                <div className="flex items-center justify-between py-3 px-4">
-                    <div className="text-sm font-medium">
-                        <Label htmlFor="name" className="text-right">
-                            Name
-                        </Label>
-                    </div>
-                    <div className="flex items-center">
-                        <Input
-                            type={'text'}
-                            id="name"
-                            value={username}
-                            autoComplete="off"
-                            placeholder="Enter your name"
-                            onChange={(e) => {
-                                oasisStorage.set('username', e.target.value)
-                                setUsername(e.target.value)
-                            }}
-                            className="col-span-3"
-                        />
-                    </div>
+                <Tabs defaultValue="hd" className="">
+                    <TabsList className={'bg-[#F4F4F5] dark:bg-[#27272A] w-full'}>
+                        <TabsTrigger value="hd">Health Details</TabsTrigger>
+                        <TabsTrigger value="edit">Edit</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="hd">
+                        <br />
+                        <h2 className='text-xl font-bold'>Health Details</h2>
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="name" className="text-right">
+                                    Name
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                {username || '-'}
+                            </div>
 
-                </div>
-                <div className="flex items-center justify-between py-3 px-4">
-                    <div className="text-sm font-medium">
-                        <Label htmlFor="name" className="text-right">
-                            Gender
-                        </Label>
-                    </div>
-                    <div className="flex items-center">
-                        <div className="flex h-5 items-center space-x-4 text-sm">
-                            <div
-                                className={`${gender == "Boy" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
-                                onClick={() => {
-                                    setGender('Boy')
-                                    oasisStorage.set("gender", 'Boy')
-                                }}
-                            >
-                                Boy
+                        </div>
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="name" className="text-right">
+                                    Gender
+                                </Label>
                             </div>
-                            <Separator orientation="vertical" />
-                            <div
-                                className={`${gender == "Girl" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
-                                onClick={() => {
-                                    setGender('Girl')
-                                    oasisStorage.set("gender", 'Girl')
-                                }}
-                            >
-                                Girl
-                            </div>
-                            <Separator orientation="vertical" />
-                            <div
-                                className={`${gender == "" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
-                                onClick={() => {
-                                    setGender('')
-                                    oasisStorage.set("gender", '')
-                                }}
-                            >
-                                -
+                            <div className="flex items-center">
+                                {gender || '-'}
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div className="flex items-center justify-between py-3 px-4">
-                    <div className="text-sm font-medium">
-                        <Label htmlFor="bt" className="text-right">
-                            Blood Type
-                        </Label>
-                    </div>
-                    <div className="flex items-center">
-                        <Input
-                            type={'text'}
-                            id="bt"
-                            defaultValue={bloodType}
-                            autoComplete="off"
-                            placeholder="A/B/O/AB"
-                            onChange={(e) => {
-                                oasisStorage.set('bloodType', e.target.value)
-                                setBloodType(e.target.value)
-                            }}
-                            className="col-span-3"
-                        />
-                    </div>
-                </div>
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="dob" className="text-right">
+                                    Date of Birth (MM/DD/YYYY)
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                <span className='mr-2'>{dob || '-'}</span>
+                                {YearOfDOB && (<span>({year - YearOfDOB})</span>)}
+                            </div>
+                        </div>
 
-                <div className="flex items-center justify-between py-3 px-4">
-                    <div className="text-sm font-medium">
-                        <Label htmlFor="wt" className="text-right">
-                            Weight (kg)
-                        </Label>
-                    </div>
-                    <div className="flex items-center">
-                        <Input
-                            type={'number'}
-                            id="wt"
-                            step="0.01"
-                            defaultValue={weight}
-                            autoComplete="off"
-                            placeholder="...kg"
-                            onChange={(e) => {
-                                oasisStorage.set('weight', e.target.value)
-                                setWeight(e.target.value)
-                            }}
-                            className="col-span-3"
-                        />
-                    </div>
-                </div>
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="bt" className="text-right">
+                                    Blood Type
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                {bloodType || '-'}
+                            </div>
+                        </div>
 
-                <div className="flex items-center justify-between py-3 px-4">
-                    <div className="text-sm font-medium">
-                        <Label htmlFor="ht" className="text-right">
-                            Height (m)
-                        </Label>
-                    </div>
-                    <div className="flex items-center">
-                        <Input
-                            id="ht"
-                            type={'number'}
-                            step="0.01"
-                            defaultValue={height}
-                            autoComplete="off"
-                            placeholder="...m"
-                            onChange={(e) => {
-                                oasisStorage.set('height', e.target.value)
-                                setHeight(e.target.value)
-                            }}
-                            onBlur={(e) => {
-                                if (e.target.value) {
-                                    setHeight(parseFloat(e.target.value).toFixed(2));
-                                }
-                            }}
-                            className="col-span-3"
-                        />
-                    </div>
-                </div>
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="wt" className="text-right">
+                                    Weight (kg)
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                {weight || '-'}
+                            </div>
+                        </div>
 
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="ht" className="text-right">
+                                    Height (m)
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                {height || '-'}
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="name" className="text-right">
+                                    Organ Donar
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                {od ? (od == 'No' ? (<span className='font-bold text-red-500'>No</span>) : (<span className='font-bold dark:text-lime-300 text-lime-500 '>Yes</span>)) : '-'}
+                            </div>
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="edit">
+                        <br />
+                        <h2 className='text-xl font-bold'>Health Details</h2>
+                        <p className='text-sm'>The details will be auto saved.</p>
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="name" className="text-right">
+                                    Name
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                <Input
+                                    type={'text'}
+                                    id="name"
+                                    value={username}
+                                    autoComplete="off"
+                                    placeholder="Enter your name"
+                                    onChange={(e) => {
+                                        oasisStorage.set('username', e.target.value)
+                                        setUsername(e.target.value)
+                                    }}
+                                    className="col-span-3"
+                                />
+                            </div>
+
+                        </div>
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="name" className="text-right">
+                                    Gender
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="flex h-5 items-center space-x-4 text-sm">
+                                    <div
+                                        className={`${gender == "Boy" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
+                                        onClick={() => {
+                                            setGender('Boy')
+                                            oasisStorage.set("gender", 'Boy')
+                                        }}
+                                    >
+                                        Boy
+                                    </div>
+                                    <Separator orientation="vertical" />
+                                    <div
+                                        className={`${gender == "Girl" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
+                                        onClick={() => {
+                                            setGender('Girl')
+                                            oasisStorage.set("gender", 'Girl')
+                                        }}
+                                    >
+                                        Girl
+                                    </div>
+                                    <Separator orientation="vertical" />
+                                    <div
+                                        className={`${gender == "" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
+                                        onClick={() => {
+                                            setGender('')
+                                            oasisStorage.set("gender", '')
+                                        }}
+                                    >
+                                        -
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="dob" className="text-right">
+                                    Date of Birth (MM/DD/YYYY)
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                <Input
+                                    id="dob"
+                                    type={'date'}
+                                    defaultValue={dob}
+                                    autoComplete="off"
+                                    placeholder="mm/dd/yyyy"
+                                    onChange={(e) => {
+                                        oasisStorage.set('dob', e.target.value)
+                                        setDob(e.target.value)
+                                    }}
+                                    className="col-span-3 mr-2"
+                                />
+                                {YearOfDOB && (<span>({year - YearOfDOB})</span>)}
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="bt" className="text-right">
+                                    Blood Type
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                <Input
+                                    type={'text'}
+                                    id="bt"
+                                    defaultValue={bloodType}
+                                    autoComplete="off"
+                                    placeholder="Your blood type"
+                                    onChange={(e) => {
+                                        oasisStorage.set('bloodType', e.target.value)
+                                        setBloodType(e.target.value)
+                                    }}
+                                    className="col-span-3"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="wt" className="text-right">
+                                    Weight (kg)
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                <Input
+                                    type={'number'}
+                                    id="wt"
+                                    step="0.01"
+                                    defaultValue={weight}
+                                    autoComplete="off"
+                                    placeholder="...kg"
+                                    onChange={(e) => {
+                                        oasisStorage.set('weight', e.target.value)
+                                        setWeight(e.target.value)
+                                    }}
+                                    className="col-span-3"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="ht" className="text-right">
+                                    Height (m)
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                <Input
+                                    id="ht"
+                                    type={'number'}
+                                    step="0.01"
+                                    defaultValue={height}
+                                    autoComplete="off"
+                                    placeholder="...m"
+                                    onChange={(e) => {
+                                        oasisStorage.set('height', e.target.value)
+                                        setHeight(e.target.value)
+                                    }}
+                                    onBlur={(e) => {
+                                        if (e.target.value) {
+                                            setHeight(parseFloat(e.target.value).toFixed(2));
+                                        }
+                                    }}
+                                    className="col-span-3"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 px-4">
+                            <div className="text-sm font-medium">
+                                <Label htmlFor="name" className="text-right">
+                                    Organ Donar
+                                </Label>
+                            </div>
+                            <div className="flex items-center">
+                                <div className="flex h-5 items-center space-x-4 text-sm">
+                                    <div
+                                        className={`${od == "Yes" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
+                                        onClick={() => {
+                                            setOD('Yes')
+                                            oasisStorage.set("organDonor", 'Yes')
+                                        }}
+                                    >
+                                        Yes
+                                    </div>
+                                    <Separator orientation="vertical" />
+                                    <div
+                                        className={`${od == "No" && ('text-red-500 font-bold')}`}
+                                        onClick={() => {
+                                            setOD('No')
+                                            oasisStorage.set("organDonor", 'No')
+                                        }}
+                                    >
+                                        No
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </TabsContent>
+                </Tabs>
+
+
+                <br />
+                <p className='text-sm'>
+                    The patient has an existing health profile, allowing the rescue team to operate immediately with essential medical information.
+                </p>
                 {/* bmi && (
                     <>
                         <hr className="border-t my-4 border-gray-600 border-dashed overflow-visible relative" />

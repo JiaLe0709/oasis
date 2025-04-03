@@ -91,6 +91,10 @@ export default function Bmi() {
                     'weight': weight,
                     'height': height
                 } || null)
+
+                setWeight(weight)
+                setHeight(height)
+
             } else {
                 setLastRecord(null)
             }
@@ -101,7 +105,7 @@ export default function Bmi() {
 
     return (
         <>
-            <Toaster richColors position="top-center" />
+            <Toaster richColors position="bottom-center" />
             <div
                 className={`grid grid-rows-[20px_1fr_20px]   2xl:justify-items-center  xl:justify-items-center sm:justify-items-center   md:justify-items-center lg:justify-items-center min-h-screen p-8 gap-10 `}
             >
