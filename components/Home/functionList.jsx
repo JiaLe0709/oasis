@@ -21,6 +21,12 @@ const gridItems = [
     desc: "A calorie calculator helps teenagers measure meal calories for a day.",
     path: "/app/calories_calculator"
   },
+  {
+    icon: 'Gem_Stone.png',
+    title: "Healthy Tips",
+    desc: "A simple list of healthy lifestyle tips suggested for teenagers to practice.",
+    path: "/app/healthy_tips"
+  },
 ];
 
 export default function AppGridLayout() {
@@ -57,7 +63,7 @@ export default function AppGridLayout() {
             key={index}
             onClick={() => router.push(item.path)}
             // def white f8f9fb f4f4f5
-            className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#1C1C1C] #1F2123 dark:hover:bg-[#101112] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105 cursor-pointer"
+            className="w-full rounded-lg p-4 bg-[#F4F4F5] dark:bg-[#1C1C1C] #1F2123 dark:hover:bg-[#101112] hover:bg-[#f2f4f7] text-black dark:text-white transition-transform hover:scale-105"
           >
             <div className="flex items-center gap-4">
               <Image src={`.././${item.icon}`} width={30} height={30} alt={item.title} />

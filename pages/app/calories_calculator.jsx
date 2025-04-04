@@ -94,7 +94,7 @@ export default function CaloriesCalculator() {
 
         // Init Date
         const currentDate = new Date();
-        console.log(cats)
+        //console.log(cats)
 
         // Generate Timestamp
         const hours = currentDate.getHours();

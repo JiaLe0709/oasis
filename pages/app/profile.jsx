@@ -99,11 +99,11 @@ const Profile = () => {
     return (
         <>
             <div className="container max-w-md mx-auto px-4 py-4">
-                <div className="mr-8 flex">
+                <div className="">
                     <BackBtn />
                 </div>
                 <div className="flex flex-col items-center">
-                    <div className="relative w-32 h-32 rounded-full">
+                    <div className="w-32 h-32 rounded-full">
                         <Avatar
                             name={username || ''}
                             //colors={["#d2fae2", "#e6f8b1", "#f6d5ad", "#f6b794", "#e59da0"]}
@@ -124,80 +124,80 @@ const Profile = () => {
                     <TabsContent value="hd">
                         <br />
                         <h2 className='text-xl font-bold'>Health Details</h2>
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="name" className="text-right">
                                     Name
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 {username || '-'}
                             </div>
 
                         </div>
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="name" className="text-right">
                                     Gender
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 {gender || '-'}
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="dob" className="text-right">
                                     Date of Birth (MM/DD/YYYY)
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 <span className='mr-2'>{dob || '-'}</span>
                                 {YearOfDOB && (<span>({year - YearOfDOB})</span>)}
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="bt" className="text-right">
                                     Blood Type
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 {bloodType || '-'}
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="wt" className="text-right">
                                     Weight (kg)
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 {weight || '-'}
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="ht" className="text-right">
                                     Height (m)
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 {height || '-'}
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="name" className="text-right">
                                     Organ Donar
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 {od ? (od == 'No' ? (<span className='font-bold text-red-500'>No</span>) : (<span className='font-bold dark:text-lime-300 text-lime-500 '>Yes</span>)) : '-'}
                             </div>
                         </div>
@@ -206,13 +206,13 @@ const Profile = () => {
                         <br />
                         <h2 className='text-xl font-bold'>Health Details</h2>
                         <p className='text-sm'>The details will be auto saved.</p>
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="name" className="text-right">
                                     Name
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 <Input
                                     type={'text'}
                                     id="name"
@@ -228,14 +228,14 @@ const Profile = () => {
                             </div>
 
                         </div>
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="name" className="text-right">
                                     Gender
                                 </Label>
                             </div>
-                            <div className="flex items-center">
-                                <div className="flex h-5 items-center space-x-4 text-sm">
+                            <div className="flex  ">
+                                <div className="flex h-5   space-x-4 text-sm">
                                     <div
                                         className={`${gender == "Boy" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
                                         onClick={() => {
@@ -269,13 +269,13 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="dob" className="text-right">
                                     Date of Birth (M/D/Y)
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 <Input
                                     id="dob"
                                     type={'date'}
@@ -292,13 +292,13 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="bt" className="text-right">
                                     Blood Type
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 <Input
                                     type={'text'}
                                     id="bt"
@@ -314,13 +314,13 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="wt" className="text-right">
                                     Weight (kg)
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 <Input
                                     type={'number'}
                                     id="wt"
@@ -337,13 +337,13 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="ht" className="text-right">
                                     Height (m)
                                 </Label>
                             </div>
-                            <div className="flex items-center">
+                            <div className="flex  ">
                                 <Input
                                     id="ht"
                                     type={'number'}
@@ -365,14 +365,14 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between py-3 px-4">
+                        <div className="flex   justify-between py-3 px-4">
                             <div className="text-sm font-medium">
                                 <Label htmlFor="name" className="text-right">
                                     Organ Donar
                                 </Label>
                             </div>
-                            <div className="flex items-center">
-                                <div className="flex h-5 items-center space-x-4 text-sm">
+                            <div className="flex  ">
+                                <div className="flex h-5   space-x-4 text-sm">
                                     <div
                                         className={`${od == "Yes" && ('dark:text-lime-300 text-lime-500 font-bold')}`}
                                         onClick={() => {
@@ -402,7 +402,7 @@ const Profile = () => {
                 <h2 className='text-xl font-bold'>💡 Info</h2>
                 <PhotoProvider>
                     <PhotoView src="./../hp.png">
-                        <div className="flex justify-center items-center">
+                        <div className="flex justify-center  ">
                             <Image
                                 alt="HealthProfile"
                                 className="rounded-lg"
