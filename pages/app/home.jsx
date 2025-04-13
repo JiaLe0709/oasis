@@ -6,6 +6,7 @@ import confetti from 'canvas-confetti';
 import { useRouter } from 'next/router';
 import { Scale, ChevronRight } from "lucide-react"
 import Image from 'next/image';
+import { Tips } from '@/lib/tips';
 
 export default function Home() {
   const router = useRouter();
@@ -21,6 +22,8 @@ export default function Home() {
   const [suggestedCaloriesIntake, setSuggestedCaloriesIntake] = useState(0)
 
   const [routerEvent, setRouterEvent] = useState('')
+
+  const [tips, setTips] = useState("Laughter is the best medicine 😂")
 
   // Confetti animation
   const duration = 3.2 * 1000;
@@ -62,6 +65,17 @@ export default function Home() {
       setRouterEvent(event)
     }
   }, [router])
+
+  useEffect(() => {
+    let index = 0;
+
+    const loop = setInterval(() => {
+      setTips(Tips[index]);
+      index = (index + 1) % Tips.length;
+    }, 3500);
+
+    return () => clearInterval(loop);
+  }, [])
 
   // Init Data
   useEffect(() => {
@@ -193,7 +207,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-bold">{greeting}, {username} !</h1>
-              <p className="text-sm dark:text-lime-300 text-lime-500 font-bold">The sky is not the limit.</p>
+              <p className="text-sm dark:text-lime-300 text-lime-500 font-bold">{tips}</p>
             </div>
           </div>
           <div className="space-y-6 border-lg border-gray-800  p-2 ">
@@ -328,7 +342,7 @@ export default function Home() {
           <footer className="flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
             <Image alt='Jia Le' height={80} width={150} className='invert dark:invert-0' src='./../jiale.png' />
           </footer>
-          <br/>
+          <br />
           <div className="flex items-center justify-center gap-2 -mt-8 relative">
             <div className="-mt-4 ">
               <Image alt='Jia Mun' height={30} width={100} className='invert dark:invert-0' src='./../jiamun.png' />
