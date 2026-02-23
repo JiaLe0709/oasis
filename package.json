@@ -13,7 +13,7 @@
     "icon": "capacitor-assets generate"
   },
   "dependencies": {
-    "@capacitor/android": "^7.0.1",
+    "@capacitor/android": "^8.1.0",
     "@capacitor/core": "^7.0.1",
     "@capacitor/local-notifications": "^7.0.0",
     "@ionic/storage": "^4.0.0",
