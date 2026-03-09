@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
-    "@capacitor/core": "^8.1.0",
+    "@capacitor/core": "^8.2.0",
     "@capacitor/local-notifications": "^8.0.1",
     "@ionic/storage": "^4.0.0",
     "@radix-ui/react-dialog": "^1.1.15",
