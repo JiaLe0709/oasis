@@ -36,7 +36,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.34.3",
     "lucide-react": "^0.576.0",
-    "motion": "^12.34.3",
+    "motion": "^12.35.2",
     "next": "^16.1.6",
     "npm": "^11.10.1",
     "npm-check-updates": "^19.4.1",
